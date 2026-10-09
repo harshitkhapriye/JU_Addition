@@ -1,0 +1,980 @@
+//https://claude.ai/artifact/PCmEotPw9fGy154hjoiXXQ
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPIN Lockout &amp; Cooldown — Manual Balance Edit</title>
+    <style>
+        :root {
+            --bg: #15171c;
+            --surface: #1e2128;
+            --surface-2: #262a33;
+            --surface-3: #2f333e;
+            --line: #363b46;
+            --gold: #c9a227;
+            --gold-soft: #8a7527;
+            --red: #e05a4e;
+            --red-soft: #3a2222;
+            --green: #4caf7d;
+            --green-soft: #1f3129;
+            --amber: #d99a3f;
+            --amber-soft: #3a2f1a;
+            --text: #ece8dd;
+            --text-muted: #9a9ca8;
+            --text-faint: #63666f;
+            --radius-lg: 18px;
+            --radius-md: 10px;
+            --radius-sm: 6px;
+            --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+        }
+
+        @media (prefers-color-scheme: light) {
+            :root:not([data-theme="dark"]) {
+                --bg: #f3f1ec;
+                --surface: #ffffff;
+                --surface-2: #f7f5f0;
+                --surface-3: #edeae2;
+                --line: #ddd8cc;
+                --text: #211f1a;
+                --text-muted: #5b584f;
+                --text-faint: #8a867a;
+                --red-soft: #fbe3e0;
+                --green-soft: #e1f2e8;
+                --amber-soft: #f6e9d3;
+            }
+        }
+
+        :root[data-theme="light"] {
+            --bg: #f3f1ec;
+            --surface: #ffffff;
+            --surface-2: #f7f5f0;
+            --surface-3: #edeae2;
+            --line: #ddd8cc;
+            --text: #211f1a;
+            --text-muted: #5b584f;
+            --text-faint: #8a867a;
+            --red-soft: #fbe3e0;
+            --green-soft: #e1f2e8;
+            --amber-soft: #f6e9d3;
+        }
+
+        :root[data-theme="dark"] {
+            --bg: #15171c;
+            --surface: #1e2128;
+            --surface-2: #262a33;
+            --surface-3: #2f333e;
+            --line: #363b46;
+            --text: #ece8dd;
+            --text-muted: #9a9ca8;
+            --text-faint: #63666f;
+            --red-soft: #3a2222;
+            --green-soft: #1f3129;
+            --amber-soft: #3a2f1a;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-body);
+            padding: 28px 18px 60px;
+            line-height: 1.5;
+        }
+
+        .wrap {
+            max-width: 1080px;
+            margin: 0 auto;
+        }
+
+        header.page {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px 28px;
+            align-items: flex-end;
+            justify-content: space-between;
+            margin-bottom: 26px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        header.page h1 {
+            font-size: clamp(22px, 3vw, 30px);
+            margin: 0 0 6px;
+            font-weight: 650;
+            letter-spacing: -0.01em;
+        }
+
+        header.page p {
+            margin: 0;
+            color: var(--text-muted);
+            max-width: 52ch;
+            font-size: 14.5px;
+        }
+
+        .badge-demo {
+            font-size: 12px;
+            color: var(--gold);
+            background: var(--amber-soft);
+            border: 1px solid var(--gold-soft);
+            padding: 5px 11px;
+            border-radius: 999px;
+            white-space: nowrap;
+            font-weight: 600;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 22px;
+            align-items: start;
+        }
+
+        @media (max-width:820px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ---- Left: PIN console ---- */
+        .console {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            padding: 26px 24px 24px;
+        }
+
+        .console-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+
+        .console-head h2 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 650;
+        }
+
+        .action-target {
+            font-size: 12.5px;
+            color: var(--text-muted);
+            margin: 2px 0 20px;
+        }
+
+        .action-target strong {
+            color: var(--text);
+        }
+
+        .status-line {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            min-height: 22px;
+            margin-bottom: 16px;
+            font-size: 13.5px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-faint);
+            flex: none;
+        }
+
+        .status-dot.ok {
+            background: var(--green);
+        }
+
+        .status-dot.warn {
+            background: var(--amber);
+        }
+
+        .status-dot.bad {
+            background: var(--red);
+        }
+
+        .pin-dots {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin: 6px 0 22px;
+        }
+
+        .pin-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid var(--line);
+            background: transparent;
+            transition: background .15s, border-color .15s, transform .1s;
+        }
+
+        .pin-dot.filled {
+            background: var(--text);
+            border-color: var(--text);
+        }
+
+        .pin-dot.shake {
+            animation: shakeit .38s;
+        }
+
+        @keyframes shakeit {
+
+            10%,
+            90% {
+                transform: translateX(-1px);
+            }
+
+            20%,
+            80% {
+                transform: translateX(3px);
+            }
+
+            30%,
+            50%,
+            70% {
+                transform: translateX(-5px);
+            }
+
+            40%,
+            60% {
+                transform: translateX(5px);
+            }
+        }
+
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+
+        .key {
+            background: var(--surface-2);
+            border: 1px solid var(--line);
+            color: var(--text);
+            font-size: 18px;
+            font-weight: 600;
+            padding: 15px 0;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            user-select: none;
+            transition: background .12s, transform .06s, border-color .12s;
+            font-family: var(--font-mono);
+        }
+
+        .key:hover {
+            background: var(--surface-3);
+        }
+
+        .key:active {
+            transform: scale(0.96);
+        }
+
+        .key.fn {
+            font-family: var(--font-body);
+            font-size: 12.5px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .key:disabled {
+            opacity: .35;
+            cursor: not-allowed;
+        }
+
+        .key:disabled:hover {
+            background: var(--surface-2);
+        }
+
+        .lock-banner {
+            margin-top: 16px;
+            padding: 14px 15px;
+            border-radius: var(--radius-md);
+            background: var(--red-soft);
+            border: 1px solid #6b3430;
+            display: none;
+        }
+
+        .lock-banner.show {
+            display: block;
+        }
+
+        .lock-banner .lb-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+
+        .lock-banner .lb-title {
+            font-weight: 650;
+            font-size: 13.5px;
+            color: var(--red);
+        }
+
+        .lock-banner .lb-timer {
+            font-family: var(--font-mono);
+            font-size: 18px;
+            font-weight: 650;
+            color: var(--red);
+        }
+
+        .lock-banner .lb-note {
+            font-size: 12.5px;
+            color: var(--text-muted);
+        }
+
+        .override-btn {
+            width: 100%;
+            margin-top: 12px;
+            padding: 11px;
+            border-radius: var(--radius-md);
+            border: 1px dashed var(--gold-soft);
+            background: transparent;
+            color: var(--gold);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: none;
+        }
+
+        .override-btn.show {
+            display: block;
+        }
+
+        .override-btn:hover {
+            background: var(--amber-soft);
+        }
+
+        .success-banner {
+            margin-top: 16px;
+            padding: 14px 15px;
+            border-radius: var(--radius-md);
+            background: var(--green-soft);
+            border: 1px solid #2c5540;
+            display: none;
+            font-size: 13.5px;
+            color: var(--green);
+            font-weight: 600;
+        }
+
+        .success-banner.show {
+            display: block;
+        }
+
+        .reset-link {
+            display: block;
+            text-align: center;
+            margin-top: 16px;
+            font-size: 12px;
+            color: var(--text-faint);
+            background: none;
+            border: none;
+            cursor: pointer;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
+        .reset-link:hover {
+            color: var(--text-muted);
+        }
+
+        /* ---- Right column ---- */
+        .right-col {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .panel {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            padding: 22px 24px;
+        }
+
+        .panel h3 {
+            margin: 0 0 4px;
+            font-size: 15px;
+            font-weight: 650;
+        }
+
+        .panel .sub {
+            margin: 0 0 16px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        table.tiers {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        table.tiers th {
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-muted);
+            padding: 0 10px 8px 0;
+            border-bottom: 1px solid var(--line);
+            font-size: 12px;
+        }
+
+        table.tiers td {
+            padding: 9px 10px 9px 0;
+            border-bottom: 1px solid var(--line);
+            vertical-align: middle;
+        }
+
+        table.tiers tr:last-child td {
+            border-bottom: none;
+        }
+
+        .tier-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 26px;
+            height: 22px;
+            padding: 0 7px;
+            border-radius: 999px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            font-weight: 650;
+        }
+
+        .tier-pill.n1 {
+            background: var(--surface-3);
+            color: var(--text-muted);
+        }
+
+        .tier-pill.n2 {
+            background: var(--amber-soft);
+            color: var(--amber);
+        }
+
+        .tier-pill.n3 {
+            background: var(--red-soft);
+            color: var(--red);
+        }
+
+        .row-current {
+            outline: 1px solid var(--gold-soft);
+            background: var(--amber-soft);
+            border-radius: var(--radius-sm);
+        }
+
+        .row-current td:first-child {
+            border-radius: 6px 0 0 6px;
+        }
+
+        .row-current td:last-child {
+            border-radius: 0 6px 6px 0;
+        }
+
+        .log-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            max-height: 290px;
+            overflow-y: auto;
+        }
+
+        .log-item {
+            display: grid;
+            grid-template-columns: 64px 1fr auto;
+            gap: 12px;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--line);
+            font-size: 13px;
+        }
+
+        .log-item:last-child {
+            border-bottom: none;
+        }
+
+        .log-time {
+            font-family: var(--font-mono);
+            font-size: 11.5px;
+            color: var(--text-faint);
+        }
+
+        .log-desc {
+            color: var(--text);
+        }
+
+        .log-desc .who {
+            color: var(--text-muted);
+            font-size: 12px;
+            display: block;
+            margin-top: 1px;
+        }
+
+        .log-tag {
+            font-size: 11px;
+            font-weight: 650;
+            padding: 3px 9px;
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+
+        .log-tag.fail {
+            background: var(--red-soft);
+            color: var(--red);
+        }
+
+        .log-tag.lock {
+            background: var(--red-soft);
+            color: var(--red);
+        }
+
+        .log-tag.ok {
+            background: var(--green-soft);
+            color: var(--green);
+        }
+
+        .log-tag.admin {
+            background: var(--amber-soft);
+            color: var(--amber);
+        }
+
+        .log-empty {
+            color: var(--text-faint);
+            font-size: 13px;
+            padding: 18px 0;
+            text-align: center;
+        }
+
+        .note-box {
+            background: var(--surface-2);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            font-size: 12.5px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .note-box code {
+            font-family: var(--font-mono);
+            background: var(--surface-3);
+            padding: 1px 5px;
+            border-radius: 4px;
+            color: var(--text);
+            font-size: 11.5px;
+        }
+
+        .flow-cols {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        @media (max-width:600px) {
+            .flow-cols {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .flow-step {
+            background: var(--surface-2);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-md);
+            padding: 13px 12px;
+        }
+
+        .flow-step .fs-n {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--gold);
+            margin-bottom: 6px;
+        }
+
+        .flow-step .fs-t {
+            font-size: 12.5px;
+            font-weight: 650;
+            margin-bottom: 4px;
+        }
+
+        .flow-step .fs-d {
+            font-size: 11.5px;
+            color: var(--text-muted);
+        }
+
+        footer.page {
+            margin-top: 26px;
+            font-size: 12px;
+            color: var(--text-faint);
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+
+        <header class="page">
+            <div>
+                <h1>PIN lockout &amp; cooldown — manual balance edits</h1>
+                <p>Interactive mock for editing Bullion Stock or Amount Summary values by PIN. Try entering the wrong
+                    PIN repeatedly on the left to see the lockout escalate.</p>
+            </div>
+            <span class="badge-demo">Demo — timers sped up</span>
+        </header>
+
+        <div class="grid">
+
+            <!-- LEFT: interactive PIN console -->
+            <div class="console">
+                <div class="console-head">
+                    <h2>Confirm PIN</h2>
+                </div>
+                <p class="action-target">Editing <strong>Fine Silver — Bullion Stock</strong></p>
+
+                <div class="status-line" id="statusLine">
+                    <span class="status-dot" id="statusDot"></span>
+                    <span id="statusText">Enter your 4-digit PIN to continue</span>
+                </div>
+
+                <div class="pin-dots" id="pinDots">
+                    <span class="pin-dot" data-i="0"></span>
+                    <span class="pin-dot" data-i="1"></span>
+                    <span class="pin-dot" data-i="2"></span>
+                    <span class="pin-dot" data-i="3"></span>
+                </div>
+
+                <div class="keypad" id="keypad">
+                    <button class="key" data-k="1">1</button>
+                    <button class="key" data-k="2">2</button>
+                    <button class="key" data-k="3">3</button>
+                    <button class="key" data-k="4">4</button>
+                    <button class="key" data-k="5">5</button>
+                    <button class="key" data-k="6">6</button>
+                    <button class="key" data-k="7">7</button>
+                    <button class="key" data-k="8">8</button>
+                    <button class="key" data-k="9">9</button>
+                    <button class="key fn" data-k="clear">Clear</button>
+                    <button class="key" data-k="0">0</button>
+                    <button class="key fn" data-k="back">&larr; Back</button>
+                </div>
+
+                <div class="lock-banner" id="lockBanner">
+                    <div class="lb-top">
+                        <span class="lb-title">Locked — too many attempts</span>
+                        <span class="lb-timer" id="lbTimer">0:00</span>
+                    </div>
+                    <div class="lb-note">PIN entry is disabled while this cooldown runs. Enforced by the server, not
+                        this screen.</div>
+                </div>
+
+                <div class="success-banner" id="successBanner">PIN confirmed — balance edit unlocked.</div>
+
+                <button class="override-btn" id="overrideBtn">Owner override &nbsp;·&nbsp; unlock with admin
+                    PIN</button>
+
+                <button class="reset-link" id="resetDemo">Reset this demo</button>
+            </div>
+
+            <!-- RIGHT: explainer + live log -->
+            <div class="right-col">
+
+                <div class="panel">
+                    <h3>Escalation tiers</h3>
+                    <p class="sub">Cooldown length grows with each wrong attempt — the counter never resets just because
+                        a cooldown expires, only a correct PIN clears it.</p>
+                    <table class="tiers" id="tiersTable">
+                        <thead>
+                            <tr>
+                                <th>Attempt</th>
+                                <th>Result</th>
+                                <th>Cooldown</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-tier="1-3">
+                                <td><span class="tier-pill n1">1–3</span></td>
+                                <td>Warning shown, no lock</td>
+                                <td>—</td>
+                            </tr>
+                            <tr data-tier="4">
+                                <td><span class="tier-pill n1">4</span></td>
+                                <td>Locked</td>
+                                <td>1 minute</td>
+                            </tr>
+                            <tr data-tier="5">
+                                <td><span class="tier-pill n2">5</span></td>
+                                <td>Locked</td>
+                                <td>5 minutes</td>
+                            </tr>
+                            <tr data-tier="6">
+                                <td><span class="tier-pill n2">6</span></td>
+                                <td>Locked + admin notified</td>
+                                <td>30 minutes</td>
+                            </tr>
+                            <tr data-tier="7">
+                                <td><span class="tier-pill n3">7+</span></td>
+                                <td>Locked + admin notified</td>
+                                <td>24 hours</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="note-box">
+                        Demo uses <code>10s / 20s / 40s / 90s</code> in place of the real
+                        <code>1m / 5m / 30m / 24h</code>, so the escalation is visible without waiting.
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h3>Live attempt log</h3>
+                    <p class="sub">What gets written server-side on every try — this is what an owner or auditor would
+                        see later.</p>
+                    <div class="log-list" id="logList">
+                        <div class="log-empty">No attempts yet in this session.</div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h3>Where enforcement lives</h3>
+                    <div class="flow-cols">
+                        <div class="flow-step">
+                            <div class="fs-n">01</div>
+                            <div class="fs-t">PIN entered</div>
+                            <div class="fs-d">Sent to server on submit — never checked in the app itself.</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="fs-n">02</div>
+                            <div class="fs-t">Server checks counter</div>
+                            <div class="fs-d">Per user, per action type. Server clock only, not device time.</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="fs-n">03</div>
+                            <div class="fs-t">Lock applied if due</div>
+                            <div class="fs-d">API itself refuses further tries — UI lock is just a mirror of this.</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="fs-n">04</div>
+                            <div class="fs-t">Owner notified</div>
+                            <div class="fs-d">From the 3rd failed try onward, by app notification.</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <footer class="page">Mockup for internal review — not connected to live data.</footer>
+    </div>
+
+    <script>
+        (function () {
+            var CORRECT_PIN = "7410"; // demo-only "right" PIN so you can also show the success path
+            var DEMO_COOLDOWNS = [10, 20, 40, 90]; // seconds, for tiers 4,5,6,7+
+            var pin = "";
+            var attempts = 0;
+            var locked = false;
+            var lockTimer = null;
+            var lockRemaining = 0;
+
+            var pinDots = document.querySelectorAll('.pin-dot');
+            var statusText = document.getElementById('statusText');
+            var statusDot = document.getElementById('statusDot');
+            var keypad = document.getElementById('keypad');
+            var lockBanner = document.getElementById('lockBanner');
+            var lbTimer = document.getElementById('lbTimer');
+            var successBanner = document.getElementById('successBanner');
+            var overrideBtn = document.getElementById('overrideBtn');
+            var logList = document.getElementById('logList');
+            var resetDemo = document.getElementById('resetDemo');
+            var tiersTable = document.getElementById('tiersTable');
+
+            function setStatus(text, mood) {
+                statusText.textContent = text;
+                statusDot.className = 'status-dot' + (mood ? ' ' + mood : '');
+            }
+
+            function renderDots() {
+                pinDots.forEach(function (d, i) {
+                    d.classList.toggle('filled', i < pin.length);
+                });
+            }
+
+            function shakeDots() {
+                pinDots.forEach(function (d) { d.classList.add('shake'); });
+                setTimeout(function () {
+                    pinDots.forEach(function (d) { d.classList.remove('shake'); });
+                }, 380);
+            }
+
+            function nowLabel() {
+                var d = new Date();
+                var h = d.getHours().toString().padStart(2, '0');
+                var m = d.getMinutes().toString().padStart(2, '0');
+                var s = d.getSeconds().toString().padStart(2, '0');
+                return h + ':' + m + ':' + s;
+            }
+
+            function addLog(tag, tagClass, desc, who) {
+                var empty = logList.querySelector('.log-empty');
+                if (empty) empty.remove();
+                var item = document.createElement('div');
+                item.className = 'log-item';
+                item.innerHTML =
+                    '<span class="log-time">' + nowLabel() + '</span>' +
+                    '<span class="log-desc">' + desc + (who ? '<span class="who">' + who + '</span>' : '') + '</span>' +
+                    '<span class="log-tag ' + tagClass + '">' + tag + '</span>';
+                logList.insertBefore(item, logList.firstChild);
+            }
+
+            function clearTierHighlight() {
+                tiersTable.querySelectorAll('tr').forEach(function (r) { r.classList.remove('row-current'); });
+            }
+            function highlightTier(n) {
+                clearTierHighlight();
+                var sel;
+                if (n <= 3) sel = '1-3';
+                else if (n === 4) sel = '4';
+                else if (n === 5) sel = '5';
+                else if (n === 6) sel = '6';
+                else sel = '7';
+                var row = tiersTable.querySelector('tr[data-tier="' + sel + '"]');
+                if (row) row.classList.add('row-current');
+            }
+
+            function cooldownForAttempt(n) {
+                // attempt 4 -> index 0, 5 -> 1, 6 -> 2, 7+ -> 3
+                var idx = Math.min(n - 4, DEMO_COOLDOWNS.length - 1);
+                return DEMO_COOLDOWNS[idx];
+            }
+
+            function startLock(seconds) {
+                locked = true;
+                lockRemaining = seconds;
+                lockBanner.classList.add('show');
+                overrideBtn.classList.add('show');
+                setKeypadEnabled(false);
+                setStatus('Locked for this cooldown window', 'bad');
+                tickLock();
+                lockTimer = setInterval(tickLock, 1000);
+            }
+
+            function tickLock() {
+                var m = Math.floor(lockRemaining / 60);
+                var s = lockRemaining % 60;
+                lbTimer.textContent = m + ':' + s.toString().padStart(2, '0');
+                if (lockRemaining <= 0) {
+                    clearInterval(lockTimer);
+                    endLock(false);
+                    return;
+                }
+                lockRemaining--;
+            }
+
+            function endLock(byAdmin) {
+                locked = false;
+                lockBanner.classList.remove('show');
+                overrideBtn.classList.remove('show');
+                setKeypadEnabled(true);
+                pin = "";
+                renderDots();
+                if (byAdmin) {
+                    addLog('Unlocked', 'admin', 'Session unlocked early', 'by owner override');
+                    setStatus('Unlocked by owner override — try your PIN', 'warn');
+                } else {
+                    addLog('Cooldown ended', 'lock', 'Lock window elapsed, PIN entry re-enabled');
+                    setStatus('Cooldown over — attempts counter did not reset', 'warn');
+                }
+            }
+
+            function setKeypadEnabled(on) {
+                keypad.querySelectorAll('.key').forEach(function (b) { b.disabled = !on; });
+            }
+
+            function handleSubmit() {
+                if (pin.length !== 4 || locked) return;
+
+                if (pin === CORRECT_PIN) {
+                    attempts = 0;
+                    clearTierHighlight();
+                    successBanner.classList.add('show');
+                    setStatus('PIN confirmed', 'ok');
+                    addLog('Correct PIN', 'ok', 'Balance edit unlocked');
+                    pin = "";
+                    renderDots();
+                    setTimeout(function () { successBanner.classList.remove('show'); }, 2600);
+                    return;
+                }
+
+                attempts++;
+                shakeDots();
+                pin = "";
+                renderDots();
+                highlightTier(attempts);
+
+                if (attempts < 4) {
+                    var left = 4 - attempts;
+                    setStatus('Incorrect PIN — ' + left + ' attempt' + (left === 1 ? '' : 's') + ' left before a lock', 'warn');
+                    addLog('Wrong PIN', 'fail', 'Attempt ' + attempts + ' of 3 before lockout');
+                } else {
+                    var secs = cooldownForAttempt(attempts);
+                    addLog('Wrong PIN', 'fail', 'Attempt ' + attempts + ' — cooldown triggered');
+                    if (attempts >= 6) {
+                        addLog('Owner notified', 'admin', 'Repeated failures on Amount Summary', 'push + in-app alert');
+                    }
+                    startLock(secs);
+                }
+            }
+
+            keypad.addEventListener('click', function (e) {
+                var btn = e.target.closest('.key');
+                if (!btn || btn.disabled) return;
+                var k = btn.getAttribute('data-k');
+                if (k === 'clear') { pin = ""; renderDots(); return; }
+                if (k === 'back') { pin = pin.slice(0, -1); renderDots(); return; }
+                if (pin.length >= 4) return;
+                pin += k;
+                renderDots();
+                if (pin.length === 4) { setTimeout(handleSubmit, 140); }
+            });
+
+            overrideBtn.addEventListener('click', function () {
+                clearInterval(lockTimer);
+                endLock(true);
+            });
+
+            resetDemo.addEventListener('click', function () {
+                clearInterval(lockTimer);
+                pin = ""; attempts = 0; locked = false; lockRemaining = 0;
+                renderDots();
+                lockBanner.classList.remove('show');
+                overrideBtn.classList.remove('show');
+                successBanner.classList.remove('show');
+                setKeypadEnabled(true);
+                clearTierHighlight();
+                setStatus('Enter your 4-digit PIN to continue', '');
+                logList.innerHTML = '<div class="log-empty">No attempts yet in this session.</div>';
+            });
+
+            renderDots();
+        })();
+    </script>
+</body>
+
+</html>

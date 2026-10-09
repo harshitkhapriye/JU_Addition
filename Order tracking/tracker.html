@@ -1,0 +1,852 @@
+//https://claude.ai/artifact/XQCDDfTshALSikqrjDGYif
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Detail — Status Timeline Mockup</title>
+    <style>
+        :root {
+            --bg: #e9e6f2;
+            --card: #ffffff;
+            --line: #eceaf3;
+            --line-strong: #e0ddec;
+            --text: #211f2e;
+            --text-muted: #7c7a8c;
+            --text-faint: #a6a4b3;
+            --purple: #6c5ce7;
+            --amber: #f2a72e;
+            --amber-soft: #fdf1de;
+            --orange: #f0821d;
+            --orange-soft: #fdead4;
+            --grey-soft: #f1f0f6;
+            --grey-line: #dcdae6;
+            --red: #e05a4e;
+            --green: #3aa876;
+            --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]) {
+                --bg: #15161c;
+                --card: #1e1f29;
+                --line: #2c2d3a;
+                --line-strong: #34354420;
+                --text: #eceaf3;
+                --text-muted: #a09fb0;
+                --text-faint: #6d6c7c;
+                --amber-soft: #3a2f18;
+                --orange-soft: #3a2413;
+                --grey-soft: #262733;
+                --grey-line: #34354a;
+            }
+        }
+
+        :root[data-theme="dark"] {
+            --bg: #15161c;
+            --card: #1e1f29;
+            --line: #2c2d3a;
+            --line-strong: #343544;
+            --text: #eceaf3;
+            --text-muted: #a09fb0;
+            --text-faint: #6d6c7c;
+            --amber-soft: #3a2f18;
+            --orange-soft: #3a2413;
+            --grey-soft: #262733;
+            --grey-line: #34354a;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg);
+            font-family: var(--font);
+            color: var(--text);
+            padding: 34px 16px 60px;
+        }
+
+        .page-note {
+            max-width: 900px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .page-note h1 {
+            font-size: 19px;
+            margin: 0 0 4px;
+            font-weight: 650;
+        }
+
+        .page-note p {
+            margin: 0;
+            font-size: 13.5px;
+            color: var(--text-muted);
+            max-width: 56ch;
+        }
+
+        .toggle-btn {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--purple);
+            background: var(--grey-soft);
+            border: 1px solid var(--grey-line);
+            padding: 7px 13px;
+            border-radius: 999px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .modal {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card);
+            border-radius: 20px;
+            box-shadow: 0 30px 60px -20px rgba(20, 15, 50, .25);
+            overflow: hidden;
+        }
+
+        .modal-head {
+            padding: 24px 28px 18px;
+            border-bottom: 1px solid var(--line);
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .head-left {
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+        }
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: var(--purple);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 15px;
+            flex: none;
+        }
+
+        .cust-name {
+            font-size: 16px;
+            font-weight: 650;
+            margin: 0 0 2px;
+        }
+
+        .cust-phone {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin: 0 0 10px;
+        }
+
+        .udhari-pill {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: var(--grey-soft);
+            border: 1px solid var(--grey-line);
+            padding: 5px 11px;
+            border-radius: 999px;
+        }
+
+        .udhari-pill b {
+            color: var(--text);
+        }
+
+        .head-right {
+            text-align: right;
+            font-size: 12.5px;
+        }
+
+        .oid {
+            font-size: 12.5px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .oid b {
+            color: var(--purple);
+            font-family: var(--font-mono);
+            font-weight: 650;
+        }
+
+        .rate-row {
+            display: flex;
+            gap: 6px;
+            justify-content: flex-end;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .tag {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 9px;
+            border-radius: 999px;
+        }
+
+        .tag.fixed {
+            background: var(--grey-soft);
+            color: var(--text-muted);
+        }
+
+        .tag.inprocess {
+            background: var(--orange-soft);
+            color: var(--orange);
+        }
+
+        .dates {
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        .print-btn {
+            margin-top: 10px;
+            font-size: 12px;
+            font-weight: 650;
+            color: var(--amber);
+            background: var(--amber-soft);
+            border: 1px solid #ecd6a4;
+            padding: 7px 14px;
+            border-radius: 999px;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 0;
+        }
+
+        @media (max-width:720px) {
+            .modal-body {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .items-col {
+            padding: 22px 26px;
+            border-right: 1px solid var(--line);
+            max-height: 560px;
+            overflow-y: auto;
+        }
+
+        @media (max-width:720px) {
+            .items-col {
+                border-right: none;
+                border-bottom: 1px solid var(--line);
+            }
+        }
+
+        .items-col h4 {
+            font-size: 13px;
+            font-weight: 700;
+            margin: 0 0 16px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .item-card {
+            border: 1px solid var(--line-strong);
+            border-radius: 14px;
+            padding: 16px 16px 15px;
+            margin-bottom: 16px;
+        }
+
+        .item-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .item-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 2px;
+        }
+
+        .item-name-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .item-name {
+            font-size: 15px;
+            font-weight: 650;
+        }
+
+        .sub-tag {
+            font-size: 10.5px;
+            font-weight: 650;
+            color: var(--text-muted);
+            background: var(--grey-soft);
+            border: 1px solid var(--grey-line);
+            padding: 2px 8px;
+            border-radius: 999px;
+        }
+
+        .metal-tag {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: var(--amber-soft);
+            color: #b3801a;
+            white-space: nowrap;
+        }
+
+        .metal-tag.silver {
+            background: var(--grey-soft);
+            color: #5c5a6b;
+        }
+
+        /* --- timeline --- */
+        .timeline {
+            margin: 14px 2px 15px;
+        }
+
+        .tl-track {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .tl-line {
+            position: absolute;
+            top: 8px;
+            left: 12px;
+            right: 12px;
+            height: 2px;
+            background: var(--grey-line);
+            z-index: 0;
+        }
+
+        .tl-line-fill {
+            position: absolute;
+            top: 8px;
+            left: 12px;
+            height: 2px;
+            background: var(--green);
+            z-index: 1;
+            transition: width .3s;
+        }
+
+        .tl-step {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 19%;
+        }
+
+        .tl-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--card);
+            border: 2px solid var(--grey-line);
+            margin-bottom: 7px;
+        }
+
+        .tl-step.done .tl-dot {
+            background: var(--green);
+            border-color: var(--green);
+        }
+
+        .tl-step.current .tl-dot {
+            border-color: var(--orange);
+            background: var(--card);
+            box-shadow: 0 0 0 4px var(--orange-soft);
+        }
+
+        .tl-step.current .tl-dot::after {
+            content: '';
+            display: block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--orange);
+            margin: 3px auto;
+        }
+
+        .tl-label {
+            font-size: 10px;
+            text-align: center;
+            color: var(--text-faint);
+            line-height: 1.25;
+            max-width: 64px;
+        }
+
+        .tl-step.done .tl-label {
+            color: var(--text-muted);
+        }
+
+        .tl-step.current .tl-label {
+            color: var(--orange);
+            font-weight: 700;
+        }
+
+        .tl-when {
+            font-size: 9px;
+            color: var(--text-faint);
+            margin-top: 2px;
+            font-family: var(--font-mono);
+        }
+
+        .weights {
+            display: flex;
+            gap: 22px;
+            margin: 12px 0 10px;
+        }
+
+        .weight-block {
+            text-align: left;
+        }
+
+        .weight-block .wl {
+            font-size: 10.5px;
+            color: var(--text-faint);
+            margin-bottom: 2px;
+        }
+
+        .weight-block .wv {
+            font-size: 13.5px;
+            font-weight: 650;
+        }
+
+        .charges-row {
+            display: flex;
+            gap: 16px;
+            padding-top: 11px;
+            border-top: 1px dashed var(--line-strong);
+            font-size: 12px;
+            color: var(--text-muted);
+            flex-wrap: wrap;
+        }
+
+        .charges-row b {
+            color: var(--text);
+            font-weight: 650;
+        }
+
+        .summary-col {
+            padding: 22px 24px;
+        }
+
+        .summary-col .row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13.5px;
+            margin-bottom: 12px;
+        }
+
+        .summary-col .row .lab {
+            color: var(--text-muted);
+        }
+
+        .summary-col .row .val {
+            font-weight: 650;
+        }
+
+        .total-row .val {
+            font-size: 15px;
+        }
+
+        .adv-title {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 12px;
+            font-weight: 650;
+            color: var(--green);
+            margin: 16px 0 12px;
+        }
+
+        .adv-title::before {
+            content: '\2713';
+            display: inline-flex;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #e1f2e8;
+            color: var(--green);
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+
+        .bank-chip {
+            font-size: 10px;
+            font-weight: 700;
+            background: var(--grey-soft);
+            border: 1px solid var(--grey-line);
+            color: var(--text-muted);
+            padding: 2px 7px;
+            border-radius: 5px;
+            margin-left: 6px;
+        }
+
+        .balance-box {
+            margin-top: 18px;
+            background: #fbe9e7;
+            border-radius: 14px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .balance-box .bl {
+            font-size: 11px;
+            font-weight: 650;
+            color: #c25c50;
+            letter-spacing: .02em;
+        }
+
+        .balance-box .bv {
+            font-size: 24px;
+            font-weight: 750;
+            color: var(--red);
+            margin-top: 4px;
+        }
+
+        .balance-box .bn {
+            font-size: 11px;
+            color: var(--text-faint);
+            margin-top: 6px;
+        }
+
+        .legend {
+            max-width: 900px;
+            margin: 18px auto 0;
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+            font-size: 12px;
+            color: var(--text-muted);
+            justify-content: center;
+        }
+
+        .legend span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend .dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+        }
+
+        .legend .dot.g {
+            background: var(--green);
+        }
+
+        .legend .dot.o {
+            background: var(--orange);
+            border: none;
+        }
+
+        .legend .dot.p {
+            background: var(--card);
+            border: 2px solid var(--grey-line);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page-note">
+        <div>
+            <h1>Order detail — with per-item status timeline</h1>
+            <p>Timeline sits right under each product's name, so every item's stage is visible without opening the
+                Karigar Assign or Ready-to-Deliver lists separately.</p>
+        </div>
+        <button class="toggle-btn" id="themeBtn">Toggle dark preview</button>
+    </div>
+
+    <div class="modal">
+        <div class="modal-head">
+            <div class="head-left">
+                <div class="avatar">P</div>
+                <div>
+                    <p class="cust-name">Piyush</p>
+                    <p class="cust-phone">8962723423</p>
+                    <span class="udhari-pill">Total Udhari: <b>₹500.00 Dr</b></span>
+                </div>
+            </div>
+            <div class="head-right">
+                <div class="oid">ORDER ID: <b>#ORD-983012</b></div>
+                <div class="rate-row">
+                    <span style="font-size:12.5px;color:var(--text-muted);">Rate: ₹270</span>
+                    <span class="tag fixed">FIXED</span>
+                    <span class="tag inprocess">IN PROCESS</span>
+                </div>
+                <div class="dates">
+                    Order: 17-Sep-2026<br>
+                    Delivery: 24-Sep-2026
+                </div>
+                <button class="print-btn">Print Receipt</button>
+            </div>
+        </div>
+
+        <div class="modal-body">
+            <div class="items-col">
+                <h4>Item specifications &amp; progress</h4>
+
+                <!-- ITEM 1: Gold 3 — In Process -->
+                <div class="item-card">
+                    <div class="item-top">
+                        <div class="item-name-row">
+                            <span class="item-name">Gold 3</span>
+                            <span class="sub-tag">PAYAL</span>
+                        </div>
+                        <span class="metal-tag">GOLD | 100.00%</span>
+                    </div>
+
+                    <div class="timeline">
+                        <div class="tl-track">
+                            <div class="tl-line"></div>
+                            <div class="tl-line-fill" style="width:50%;"></div>
+                            <div class="tl-step done">
+                                <div class="tl-dot"></div>
+                                <div class="tl-label">Order<br>Created</div>
+                                <div class="tl-when">17 Sep</div>
+                            </div>
+                            <div class="tl-step done">
+                                <div class="tl-dot"></div>
+                                <div class="tl-label">Karigar<br>Assigned</div>
+                                <div class="tl-when">17 Sep</div>
+                            </div>
+                            <div class="tl-step current">
+                                <div class="tl-dot"></div>
+                                <div class="tl-label">In<br>Process</div>
+                                <div class="tl-when">now</div>
+                            </div>
+                            <div class="tl-step">
+                                <div class="tl-dot"></div>
+                                <div class="tl-label">Ready</div>
+                            </div>
+                            <div class="tl-step">
+                                <div class="tl-dot"></div>
+                                <div class="tl-label">Delivered</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="weights">
+                        <div class="weight-block">
+                            <div class="wl">Gross</div>
+                            <div class="wv">1.000g</div>
+                        </div>
+                        <div class="weight-block">
+                            <div class="wl">Net</div>
+                            <div class="wv">0.800g</div>
+                        </div>
+                        <div class="weight-block">
+                            <div class="wl">Fine</div>
+                            <div class="wv">0.900g</div>
+                        </div>
+                    </div>
+                    <div class="charges-row">
+                        <span>Making: <b>₹100.00 /g</b></span>
+                        <span>Labour: <b>₹200.00</b></span>
+                        <span>Qty: <b>1</b></span>
+                    </div>
+                </div>
+
+                <!-- ITEM 2: Gold 2 — In Process -->
+                <div class="item-card">
+                    <div class="item-top">
+                        <div class="item-name-row">
+                            <span class="item-name">Gold 2</span>
+                            <span class="sub-tag">CHAIN</span>
+                        </div>
+                        <span class="metal-tag">GOLD | 100.00%</span>
+                    </div>
+
+                    <div class="timeline">
+                        <div class="tl-track">
+                            <div class="tl-line"></div>
+                            <div class="tl-line-fill" style="width:50%;"></div>
+                            <div class="tl-step done">
+                                <div class="tl-dot"></div>
+                                <div class="tl-label">Order<br>Created</div>
+                                <div class="tl-when">17 Sep</div>
+                            </div>
+                            <div class="tl-step done">
+                                <div class="tl-dot"></div>
+                                <div class="tl-label">Karigar<br>Assigned</div>
+                                <div class="tl-when">17 Sep</div>
+                            </div>
+                            <div class="tl-step current">
+                                <div class="tl-dot"></div>
+                                <div class="tl-label">In<br>Process</div>
+                                <div class="tl-when">now</div>
+                            </div>
+                            <div class="tl-step">
+                                <div class="tl-dot"></div>
+                                <div class="tl-label">Ready</div>
+                            </div>
+                            <div class="tl-step">
+                                <div class="tl-dot"></div>
+                                <div class="tl-label">Delivered</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="weights">
+                        <div class="weight-block">
+                            <div class="wl">Gross</div>
+                            <div class="wv">1.000g</div>
+                        </div>
+                        <div class="weight-block">
+                            <div class="wl">Net</div>
+                            <div class="wv">0.600g</div>
+                        </div>
+                        <div class="weight-block">
+                            <div class="wl">Fine</div>
+                            <div class="wv">1.100g</div>
+                        </div>
+                    </div>
+                    <div class="charges-row">
+                        <span>Making: <b>₹0.00 /g</b></span>
+                        <span>Labour: <b>₹150.00</b></span>
+                        <span>Qty: <b>1</b></span>
+                    </div>
+                </div>
+
+                <!-- ITEM 3: Silver 1 — Pending (not yet assigned) -->
+                <div class="item-card">
+                    <div class="item-top">
+                        <div class="item-name-row">
+                            <span class="item-name">Silver 1</span>
+                            <span class="sub-tag">PAYAL</span>
+                        </div>
+                        <span class="metal-tag silver">SILVER | 100.00%</span>
+                    </div>
+
+                    <div class="timeline">
+                        <div class="tl-track">
+                            <div class="tl-line"></div>
+                            <div class="tl-line-fill" style="width:12%;"></div>
+                            <div class="tl-step done">
+                                <div class="tl-dot"></div>
+                                <div class="tl-label">Order<br>Created</div>
+                                <div class="tl-when">17 Sep</div>
+                            </div>
+                            <div class="tl-step current">
+                                <div class="tl-dot"></div>
+                                <div class="tl-label">Karigar<br>Assigned</div>
+                                <div class="tl-when">pending</div>
+                            </div>
+                            <div class="tl-step">
+                                <div class="tl-dot"></div>
+                                <div class="tl-label">In<br>Process</div>
+                            </div>
+                            <div class="tl-step">
+                                <div class="tl-dot"></div>
+                                <div class="tl-label">Ready</div>
+                            </div>
+                            <div class="tl-step">
+                                <div class="tl-dot"></div>
+                                <div class="tl-label">Delivered</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="weights">
+                        <div class="weight-block">
+                            <div class="wl">Gross</div>
+                            <div class="wv">10.000g</div>
+                        </div>
+                        <div class="weight-block">
+                            <div class="wl">Net</div>
+                            <div class="wv">5.000g</div>
+                        </div>
+                        <div class="weight-block">
+                            <div class="wl">Fine</div>
+                            <div class="wv">8.000g</div>
+                        </div>
+                    </div>
+                    <div class="charges-row">
+                        <span>Making: <b>₹100.00 /g</b></span>
+                        <span>Labour: <b>₹200.00</b></span>
+                        <span>Qty: <b>1</b></span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="summary-col">
+                <div class="row total-row">
+                    <span class="lab">Total Bill Value</span>
+                    <span class="val">₹33,810.00</span>
+                </div>
+
+                <div class="adv-title">ADVANCES PAID</div>
+                <div class="row">
+                    <span class="lab">Cash Advance</span>
+                    <span class="val" style="color:var(--green);">₹25,000.00</span>
+                </div>
+                <div class="row">
+                    <span class="lab">Online Advance <span class="bank-chip">SBI</span></span>
+                    <span class="val" style="color:var(--green);">₹1,800.00</span>
+                </div>
+                <div class="row">
+                    <span class="lab">Metal (SILVER)</span>
+                    <span class="val" style="color:var(--amber);">10.000g</span>
+                </div>
+
+                <div class="balance-box">
+                    <div class="bl">FINAL BALANCE DUE</div>
+                    <div class="bv">₹4,510.00</div>
+                    <div class="bn">Payable at time of delivery</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="legend">
+        <span><span class="dot g"></span> Completed</span>
+        <span><span class="dot o"></span> Current stage</span>
+        <span><span class="dot p"></span> Upcoming</span>
+    </div>
+
+    <script>
+        document.getElementById('themeBtn').addEventListener('click', function () {
+            var r = document.documentElement;
+            var cur = r.getAttribute('data-theme');
+            r.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
+        });
+    </script>
+</body>
+
+</html>

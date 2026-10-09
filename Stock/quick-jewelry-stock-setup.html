@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Quick Stock Setup | Just Udhari</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.5/dist/sweetalert2.all.min.js"></script>
+<style>
+  /* ================= JU THEME ================= */
+  :root {
+    color-scheme: light;
+    --bg: #f5f6fa; --card: #ffffff; --text: #1f2937; --muted: #6b7280; --line: #e7e9f0;
+    --orange: #f26b1d; --orange-2: #ff8a3d; --orange-soft: #fff1e8;
+    --navy: #1e2a3b; --green: #16a34a; --green-soft: #e9f8ef;
+    --gold: #e9a512; --silver: #8a94a6; --artificial: #d6457a; --stone: #1aa391; --franchise: #7c5cff;
+    --ju-bar: linear-gradient(90deg, #f7a28f, #f26b5b);      /* JU card top line */
+    --ju-head: linear-gradient(180deg, #fff2ec 0%, #ffffff 85%); /* JU card header */
+    --tile: #fbf5f2;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  *, *::before, *::after { box-sizing: inherit; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: "Quicksand", "Nunito", "Segoe UI", system-ui, sans-serif; font-weight: 600; }
+  button, input, select, textarea { font-family: inherit; }
+  button { cursor: pointer; }
+  button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid var(--orange-2); outline-offset: 2px; }
+  svg.i { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+  .topbar { display: flex; align-items: center; gap: 10px; background: var(--card); border-bottom: 1px solid var(--line); padding: 10px 20px; }
+  .logo { background: var(--orange); color: #fff; font-weight: 700; width: 34px; height: 34px; border-radius: 6px; display: grid; place-items: center; font-size: 17px; }
+  .brand { color: var(--orange); font-weight: 700; font-size: 14px; }
+
+  .page { max-width: 1200px; margin: 0 auto; padding: 18px 20px 30px; }
+  .page-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+  .page-title { display: flex; align-items: center; gap: 10px; margin: 0; font-size: 26px; font-weight: 700; color: var(--navy); }
+  .page-title em { font-style: normal; color: var(--orange); }
+  .head-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .pill-btn { display: inline-flex; align-items: center; gap: 7px; border-radius: 999px; padding: 8px 18px; font-size: 14px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; text-decoration: none; border: 1.5px solid var(--line); background: var(--card); color: var(--navy); }
+  .pill-btn.navy { background: var(--navy); border-color: var(--navy); color: #fff; box-shadow: 0 4px 12px rgba(30,42,59,.25); }
+  .pill-btn.outline { color: #3b5bdb; border-color: #c9d4ff; }
+  .home { color: var(--navy); display: grid; place-items: center; }
+  .page-title::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--orange); }
+  .crumb { background: linear-gradient(90deg, var(--orange), var(--orange-2)); color: #fff; padding: 6px 14px; border-radius: 999px; font-size: 13px; font-weight: 700; }
+
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; border-radius: 12px; padding: 11px 18px; font-size: 15px; font-weight: 700; border: 1.5px solid transparent; transition: transform .1s; white-space: nowrap; }
+  .btn:active { transform: scale(.97); }
+  .btn-primary { background: linear-gradient(90deg, var(--orange), var(--orange-2)); color: #fff; }
+  .btn-light { background: var(--card); color: var(--text); border-color: var(--line); }
+  .btn-light:hover { border-color: var(--orange-2); }
+  .btn[disabled] { opacity: .5; cursor: not-allowed; }
+  .link-btn { background: none; border: 0; color: var(--orange); font-size: 14px; font-weight: 700; padding: 0; white-space: nowrap; }
+
+  /* Top strip */
+  .strip { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+  .search { flex: 1; min-width: 220px; padding: 12px 16px; border: 1.5px solid var(--line); border-radius: 12px; background: var(--card); font-size: 15px; font-weight: 600; color: var(--text); }
+  .search:focus { border-color: var(--orange); outline: none; }
+  .stats { font-size: 13.5px; color: var(--muted); }
+  .stats b { color: var(--text); }
+
+  /* Step boxes */
+  .box { position: relative; overflow: hidden; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px 16px 16px; box-shadow: 0 6px 18px rgba(242,107,29,.05); }
+  .box::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--ju-bar); }
+  .step-title { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; color: var(--navy); margin: 0 0 12px; }
+  .step-no { width: 28px; height: 28px; border-radius: 9px; background: linear-gradient(135deg, var(--orange), var(--orange-2)); color: #fff; display: grid; place-items: center; font-size: 13px; flex: none; box-shadow: 0 4px 10px rgba(242,107,29,.3); }
+  .step-title .hint { text-transform: none; letter-spacing: 0; }
+  .step-title .hint { margin-left: auto; font-size: 13px; color: var(--muted); font-weight: 600; }
+
+  .mico { width: 32px; height: 32px; border-radius: 9px; display: grid; place-items: center; flex: none; background: color-mix(in srgb, var(--c) 15%, white); color: var(--c); }
+  .mico.lg { width: 46px; height: 46px; border-radius: 13px; background: #fff; box-shadow: 0 4px 12px rgba(30,42,59,.1); }
+  .mico.lg svg.i { width: 24px; height: 24px; }
+
+  /* Step 1: material (JU dashboard card style) */
+  .mats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 16px; }
+  .mat { position: relative; overflow: hidden; text-align: left; background: var(--card); border: 1.5px solid var(--line); border-radius: 18px; padding: 0; color: var(--text); box-shadow: 0 6px 18px rgba(242,107,29,.06); transition: box-shadow .15s, border-color .15s; }
+  .mat::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--ju-bar); }
+  .mats.has-active .mat:not(.active) { transform: scale(.97); }
+  .mats.has-active .mat:not(.active):hover { opacity: .85; filter: none; }
+  .mat { transition: opacity .2s, filter .2s, transform .2s, box-shadow .2s, border-color .2s; }
+  .mat:hover { border-color: var(--orange-2); }
+  .mat.active { transform: translateY(-3px); }
+  .mat.active .mat-top { background: linear-gradient(180deg, #ffe3d6 0%, #fff6f1 100%); }
+  .mat.active::after { content: "✓ Active"; position: absolute; top: 10px; right: 10px; background: var(--navy); color: #fff; font-size: 10.5px; letter-spacing: .4px; padding: 2px 8px; border-radius: 999px; }
+  .mat.active { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(242,107,29,.18), 0 8px 20px rgba(242,107,29,.12); }
+  .mat-top { display: flex; align-items: center; gap: 12px; padding: 16px 14px 12px; background: var(--ju-head); }
+  .mat-ico { width: 46px; height: 46px; border-radius: 13px; background: #fff; display: grid; place-items: center; color: var(--c); box-shadow: 0 4px 12px rgba(30,42,59,.1); flex: none; }
+  .mat-ico svg.i { width: 24px; height: 24px; }
+  .mat b { display: block; font-size: 16px; letter-spacing: .8px; text-transform: uppercase; color: var(--navy); }
+  .mat span.sub { font-size: 12px; color: var(--muted); }
+  .mat-ico { position: relative; }
+  .mat .sel-badge { position: absolute; top: -7px; right: -9px; background: var(--orange); color: #fff; font-size: 11px; font-weight: 700; border-radius: 999px; padding: 1px 6px; border: 2px solid #fff; }
+  .mat-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 0 12px 12px; }
+  .mat-stats div { background: var(--tile); border-radius: 10px; padding: 7px 4px; text-align: center; }
+  .mat-stats small { display: block; font-size: 10px; letter-spacing: .8px; color: var(--muted); }
+  .mat-stats strong { font-size: 15px; color: var(--navy); }
+  .mat-stats .rdy strong { color: var(--orange); }
+
+  /* Step 2 + 3 */
+  .work { display: grid; grid-template-columns: 300px 1fr; gap: 14px; align-items: start; }
+  .types { display: grid; gap: 6px; }
+  .type { display: flex; align-items: center; gap: 10px; text-align: left; background: var(--card); border: 2px solid var(--line); border-radius: 12px; padding: 9px 10px; color: var(--text); font-size: 15px; font-weight: 700; }
+  .type:hover { border-color: var(--orange-2); }
+  .type.active { border-color: var(--orange); background: var(--orange-soft); box-shadow: inset 4px 0 0 var(--orange); }
+  .type .cnt { margin-left: auto; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: var(--bg); color: var(--muted); white-space: nowrap; }
+  .type .cnt.on { background: var(--orange); color: #fff; }
+  .type .cnt.done { background: var(--green-soft); color: var(--green); }
+  .add-type { border: 2px dashed var(--orange-2); color: var(--orange); justify-content: center; background: none; text-transform: uppercase; letter-spacing: .5px; font-size: 13px; }
+
+  .items-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: -4px -16px 12px; padding: 12px 16px; background: var(--ju-head); border-bottom: 1px solid #f6e4dc; }
+  .items-head h3 { margin: 0; font-size: 16px; text-transform: uppercase; letter-spacing: .6px; color: var(--navy); }
+  .items-head p { margin: 2px 0 0; font-size: 12.5px; color: var(--muted); }
+  .head-actions { margin-left: auto; display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+  .prefix { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--muted); }
+  .prefix input { width: 72px; padding: 6px 8px; border: 1.5px solid var(--line); border-radius: 9px; text-transform: uppercase; text-align: center; font-weight: 700; font-size: 13px; color: var(--text); }
+  .toggle-line { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); cursor: pointer; }
+  .toggle-line input { accent-color: var(--orange); width: 16px; height: 16px; }
+
+  .new-item { display: flex; gap: 8px; margin-bottom: 10px; }
+  .new-item input { flex: 1; padding: 11px 14px; border: 1.5px dashed var(--orange-2); border-radius: 12px; font-size: 15px; font-weight: 600; color: var(--text); }
+  .new-item input:focus { outline: none; border-style: solid; border-color: var(--orange); }
+
+  .list { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 8px; }
+  .row { display: flex; align-items: center; gap: 12px; text-align: left; background: var(--card); border: 2px solid var(--line); border-radius: 12px; padding: 11px 12px; color: var(--text); width: 100%; }
+  .row:hover { border-color: var(--orange-2); }
+  .row.on { border-color: var(--orange); background: #fffaf6; }
+  .row.done { background: var(--bg); cursor: default; }
+  .row.done:hover { border-color: var(--line); }
+  .box-check { width: 24px; height: 24px; border-radius: 7px; border: 2px solid #cfd4de; display: grid; place-items: center; flex: none; color: #fff; }
+  .box-check svg.i { width: 14px; height: 14px; stroke-width: 3; opacity: 0; }
+  .row.on .box-check { background: var(--orange); border-color: var(--orange); }
+  .row.on .box-check svg.i { opacity: 1; }
+  .row.done .box-check { background: var(--green); border-color: var(--green); }
+  .row.done .box-check svg.i { opacity: 1; }
+  .row-name { font-size: 15px; font-weight: 700; line-height: 1.25; }
+  .row-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .row.done .row-sub { color: var(--green); }
+  .empty { text-align: center; color: var(--muted); padding: 40px 0; grid-column: 1 / -1; }
+
+  /* Bottom bar */
+  .bar { position: sticky; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); margin-top: 18px; background: var(--navy); color: #fff; border-radius: 16px; box-shadow: 0 10px 30px rgba(30,42,59,.25); padding: 12px 14px 12px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; z-index: 10; }
+  .bar-text { font-size: 15px; }
+  .bar-text b { font-size: 20px; color: var(--orange-2); margin-right: 4px; }
+  .bar-actions { display: flex; gap: 8px; align-items: center; }
+  .bar .btn-light { background: transparent; color: #fff; border-color: rgba(255,255,255,.3); }
+  .bar .btn { border-radius: 999px; }
+  .bar .link-btn { color: #cbd5e1; }
+
+  /* ===== LIST PAGE ===== */
+  .view { display: none; }
+  .view.show { display: block; }
+  .l-cards { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 14px; }
+  .l-card { position: relative; overflow: hidden; background: var(--card); border: 1.5px solid var(--line); border-radius: 14px; padding: 14px 12px 12px; text-align: left; color: var(--text); display: flex; align-items: center; gap: 10px; }
+  .l-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--ju-bar); }
+  .l-card.active { border-color: var(--orange); background: var(--orange-soft); }
+  .l-card small { display: block; font-size: 10.5px; letter-spacing: .7px; color: var(--muted); text-transform: uppercase; }
+  .l-card b { font-size: 20px; color: var(--navy); }
+  .l-tools { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+  .table-wrap { background: var(--card); border: 1px solid var(--line); border-radius: 16px; overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; min-width: 760px; }
+  th { background: #e8eaf8; color: var(--navy); font-size: 13.5px; text-align: left; padding: 12px; white-space: nowrap; }
+  td { padding: 11px 12px; border-bottom: 1px solid var(--line); font-size: 14px; vertical-align: middle; }
+  tr:last-child td { border-bottom: 0; }
+  tr.new-row td { background: #fffaf6; }
+  .td-item { display: flex; align-items: center; gap: 10px; font-weight: 700; }
+  .tag-pill { font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+  .tag-pill.new { background: var(--orange-soft); color: var(--orange); }
+  .tag-pill.old { background: var(--green-soft); color: var(--green); }
+  .tag-pill.grey { background: var(--bg); color: var(--muted); border: 1px solid var(--line); }
+  @media (max-width: 1000px) { .l-cards { grid-template-columns: repeat(3, 1fr); } }
+
+  /* SweetAlert JU look */
+  .swal2-title { font-size: 21px !important; color: var(--text) !important; font-weight: 700 !important; }
+  .swal2-popup { font-family: "Quicksand", "Segoe UI", sans-serif !important; border-radius: 18px !important; }
+  .swal2-styled.swal2-confirm { background: linear-gradient(90deg, var(--orange), var(--orange-2)) !important; border-radius: 12px !important; font-weight: 700 !important; }
+  .swal2-styled.swal2-cancel { background: var(--bg) !important; color: var(--text) !important; border: 1.5px solid var(--line) !important; border-radius: 12px !important; font-weight: 700 !important; }
+  .sw-form { display: grid; gap: 12px; text-align: left; }
+  .sw-form label { display: grid; gap: 5px; font-size: 13px; color: var(--muted); font-weight: 700; }
+  .sw-form input, .sw-form select, .sw-form textarea { width: 100%; padding: 10px 12px; border: 1.5px solid var(--line); border-radius: 10px; font-size: 14.5px; font-weight: 600; color: var(--text); background: var(--bg); }
+  .sw-note { font-size: 12.5px; color: var(--muted); background: var(--bg); border-radius: 10px; padding: 8px 10px; }
+  .sw-sum { display: grid; gap: 6px; text-align: left; font-size: 14px; background: var(--bg); border-radius: 12px; padding: 12px 14px; max-height: 300px; overflow: auto; }
+  .sw-sum div { display: flex; justify-content: space-between; gap: 10px; }
+  .sw-sum .grp { color: var(--muted); font-size: 12.5px; margin-top: 6px; }
+
+  @media (max-width: 1100px) { .mats { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 900px) {
+    .mats { grid-template-columns: repeat(2, 1fr); }
+    .work { grid-template-columns: 1fr; }
+    .types { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+  }
+  @media (max-width: 560px) {
+    .page-title { font-size: 20px; }
+    .bar-actions { width: 100%; }
+    .bar-actions .btn-primary { flex: 1; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo">JU</div>
+  <span class="brand">JUST UDHARI</span>
+</header>
+
+<main class="page view" id="viewSetup">
+  <div class="page-head">
+    <h1 class="page-title">Quick Stock <em>Setup</em></h1>
+    <div class="head-right">
+      <button class="pill-btn outline" id="btnNewTop">+ New</button>
+      <a class="pill-btn navy" href="#list">☰ List</a>
+      <a class="home" href="#" aria-label="Home"><svg class="i" viewBox="0 0 24 24" style="width:22px;height:22px;fill:currentColor;stroke:none"><path d="M12 3l9 8h-3v9h-5v-6h-2v6H6v-9H3z"/></svg></a>
+      <span class="crumb">› Quick Stock Setup</span>
+    </div>
+  </div>
+
+  <!-- Search + stats -->
+  <div class="strip">
+    <input class="search" id="search" type="search" placeholder="🔍  Koi bhi item dhoondo… (ring, payal, chain)">
+    <span class="stats" id="stats"></span>
+    <button class="btn btn-light" id="btnSetupAll" title="Saare ready items ek saath banao">⚡ Sab Setup Karo</button>
+  </div>
+
+  <!-- Step 1 -->
+  <div class="step-title"><span class="step-no">1</span>Material chuno</div>
+  <div class="mats" id="mats"></div>
+
+  <!-- Step 2 + 3 -->
+  <div class="work">
+    <section class="box">
+      <div class="step-title"><span class="step-no">2</span>Type chuno</div>
+      <div class="types" id="types"></div>
+    </section>
+
+    <section class="box">
+      <div class="step-title"><span class="step-no">3</span>Items tick karo <span class="hint">Jo tick karoge, wahi banega</span></div>
+      <div class="items-head" id="itemsHead"></div>
+      <div class="new-item" id="newItemWrap">
+        <input id="newItem" placeholder="+ List me nahi hai? Naam likho aur Enter dabao">
+      </div>
+      <div class="list" id="list"></div>
+    </section>
+  </div>
+
+  <!-- Bottom bar -->
+  <div class="bar">
+    <div class="bar-text"><b id="selCount">0</b> items selected</div>
+    <div class="bar-actions">
+      <button class="link-btn" id="btnView">Dekho</button>
+      <button class="btn btn-light" id="btnClear">Clear</button>
+      <button class="btn btn-primary" id="btnCreate">⚡ Items Banao</button>
+    </div>
+  </div>
+</main>
+
+<!-- ================= LIST PAGE: stock me add hue item names ================= -->
+<main class="page view" id="viewList">
+  <div class="page-head">
+    <h1 class="page-title">Stock Item <em>List</em></h1>
+    <div class="head-right">
+      <a class="pill-btn outline" href="#">+ New</a>
+      <a class="home" href="#" aria-label="Home"><svg class="i" viewBox="0 0 24 24" style="width:22px;height:22px;fill:currentColor;stroke:none"><path d="M12 3l9 8h-3v9h-5v-6h-2v6H6v-9H3z"/></svg></a>
+      <span class="crumb">› Stock Item List</span>
+    </div>
+  </div>
+
+  <div class="l-cards" id="lCards"></div>
+
+  <div class="l-tools">
+    <input class="search" id="lSearch" type="search" placeholder="🔍  Item, type ya prefix se dhoondo…">
+    <div class="seg" id="lSeg" style="display:flex;background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:3px">
+      <button data-f="all" class="btn" style="padding:7px 14px;font-size:13px">Sab</button>
+      <button data-f="new" class="btn" style="padding:7px 14px;font-size:13px">Abhi bane</button>
+      <button data-f="old" class="btn" style="padding:7px 14px;font-size:13px">Pehle se</button>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>SN.</th><th>Item Name</th><th>Material</th><th>Type / Group</th><th>Tag Prefix</th><th>Method</th><th>HSN</th><th>Kab add hua</th></tr></thead>
+      <tbody id="lBody"></tbody>
+    </table>
+  </div>
+</main>
+
+<script>
+$(function () {
+
+  // ================= ICONS =================
+  const svg = d => `<svg class="i" viewBox="0 0 24 24">${d}</svg>`;
+  const MAT_ICON = {
+    Gold: svg('<ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v4c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 10v4c0 1.7 3.1 3 7 3s7-1.3 7-3v-4"/><path d="M5 14v4c0 1.7 3.1 3 7 3s7-1.3 7-3v-4"/>'),
+    Silver: svg('<path d="M2 19h20l-3-7H5z"/><path d="M5 12l2.5-6h9L19 12"/><path d="M9 15.5h6"/>'),
+    Artificial: svg('<path d="M12 2.5l2.3 6.2 6.2 2.3-6.2 2.3L12 19.5l-2.3-6.2L3.5 11l6.2-2.3z"/>'),
+    Stone: svg('<path d="M6.5 3.5h11l4 5.5L12 21 2.5 9z"/><path d="M2.5 9h19"/><path d="M12 21L8.5 9l3.5-5.5L15.5 9z"/>'),
+    Franchise: svg('<path d="M4 9l1.5-5h13L20 9"/><path d="M4 9a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0 2.7 2.7 0 0 0 5.3 0"/><path d="M5 11v9h14v-9"/><path d="M10 20v-5h4v5"/>')
+  };
+  const MATERIALS = ['Gold', 'Silver', 'Artificial', 'Stone', 'Franchise'];
+  const MAT_SUB = { Gold: 'Pure & Standard', Silver: 'Bullion & Articles', Artificial: 'Imitation Jewelry', Stone: 'Precious Gems', Franchise: 'Store Inventory' };
+  const TYPE_ICON = [
+    ['kaan', svg('<circle cx="12" cy="5" r="2"/><path d="M12 7v3"/><path d="M8 14a4 4 0 0 0 8 0l-4-4z"/>')],
+    ['chudi', svg('<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="5.5"/>')],
+    ['haar', svg('<path d="M4 4c0 7 3.5 11 8 11s8-4 8-11"/><path d="M12 15v2"/><path d="M10 19l2-2 2 2-2 2z"/>')],
+    ['set', svg('<path d="M4 4c0 7 3.5 11 8 11s8-4 8-11"/><path d="M12 15v2"/><path d="M10 19l2-2 2 2-2 2z"/>')],
+    ['nath', svg('<circle cx="11" cy="13" r="6"/><circle cx="17" cy="9" r="1.6"/>')],
+    ['bichhiya', svg('<circle cx="12" cy="13" r="6"/><path d="M9 7l3-3 3 3"/>')],
+    ['kada', svg('<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="5.5"/>')],
+    ['bartan', svg('<path d="M4 11h16a8 8 0 0 1-16 0z"/><path d="M9 7c0-1 1-1 1-2M14 7c0-1 1-1 1-2"/>')],
+    ['pooja', svg('<path d="M12 3c2 2.5 2 4.5 0 6-2-1.5-2-3.5 0-6z"/><path d="M5 13h14l-2 6H7z"/>')],
+    ['navratna', svg('<path d="M6.5 3.5h11l4 5.5L12 21 2.5 9z"/><path d="M2.5 9h19"/>')],
+    ['upratna', svg('<path d="M6.5 3.5h11l4 5.5L12 21 2.5 9z"/><path d="M2.5 9h19"/>')],
+    ['other', svg('<path d="M12 2.5l2.3 6.2 6.2 2.3-6.2 2.3L12 19.5l-2.3-6.2L3.5 11l6.2-2.3z"/>')],
+    ['ring', svg('<circle cx="12" cy="14" r="6.5"/><path d="M9.5 5h5l-1.5 2.5h-2z"/>')],
+    ['chain', svg('<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/>')],
+    ['mangalsutra', svg('<path d="M5 4c0 6 3 10 7 10s7-4 7-10"/><circle cx="12" cy="18" r="2.5"/>')],
+    ['earring', svg('<circle cx="12" cy="5" r="2"/><path d="M12 7v3"/><path d="M8 14a4 4 0 0 0 8 0l-4-4z"/>')],
+    ['bangle', svg('<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="5.5"/>')],
+    ['necklace', svg('<path d="M4 4c0 7 3.5 11 8 11s8-4 8-11"/><path d="M12 15v2"/><path d="M10 19l2-2 2 2-2 2z"/>')],
+    ['pendant', svg('<path d="M12 2v5"/><circle cx="12" cy="14" r="6"/><circle cx="12" cy="14" r="2"/>')],
+    ['payal', svg('<path d="M3 12c3 4 15 4 18 0"/><circle cx="7" cy="16" r="1.2"/><circle cx="12" cy="17" r="1.2"/><circle cx="17" cy="16" r="1.2"/>')],
+    ['biscuit', svg('<rect x="4" y="7" width="16" height="10" rx="2"/>')],
+    ['coin', svg('<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="5"/>')],
+    ['utensil', svg('<path d="M4 11h16a8 8 0 0 1-16 0z"/><path d="M9 7c0-1 1-1 1-2M14 7c0-1 1-1 1-2"/>')]
+  ];
+  const MAT_COLOR = { Gold: 'var(--gold)', Silver: 'var(--silver)', Artificial: 'var(--artificial)', Stone: 'var(--stone)', Franchise: 'var(--franchise)' };
+  const typeIcon = t => (TYPE_ICON.find(([k]) => (t || '').toLowerCase().includes(k)) || [0, svg('<rect x="5" y="5" width="14" height="14" rx="3"/>')])[1];
+  const micon = (mat, html, lg) => `<span class="mico ${lg ? 'lg' : ''}" style="--c:${MAT_COLOR[mat]}">${html}</span>`;
+  const CHECK = `<span class="box-check">${svg('<path d="M5 12l5 5 9-10"/>')}</span>`;
+
+  // ================= DATA =================
+  // Material wise default values (HSN, purity) - apne aap lagte hain
+  const MAT_DEFAULTS = {
+    Gold:       { hsn_code: '71131910', karet: '22',   tunch: 91.6 },
+    Silver:     { hsn_code: '71131120', karet: '92.5', tunch: 92.5 },
+    Artificial: { hsn_code: '71179090', karet: '0',    tunch: 0 },
+    Stone:      { hsn_code: '71039990', karet: '0',    tunch: 0 },
+    Franchise:  { hsn_code: '71131910', karet: '22',   tunch: 91.6 }   // branded / franchise store jewellery
+  };
+  // ['Naam'] = shop me pehle se hai,  'Naam' = banane ke liye ready  (real app me backend se aayega)
+  const G = (material, type, prefix, items, method) => ({
+    material, group_name: `${material}${material === 'Gold' ? ' 22K' : ''} - ${type}`, jewellery_type: type,
+    tag_prefix: prefix, gst_rate: 3.00, wastage: 0, ...MAT_DEFAULTS[material],
+    items: items.map(x => ({ item_name: Array.isArray(x) ? x[0] : x, already_have: Array.isArray(x), tag_prefix: prefix, method: method || 'both' }))
+  });
+  // Wahi naam jo jewellers dukaan pe roz bolte/likhte hain
+  let catalog = {
+    // ----- GOLD -----
+    gold_0: G('Gold', 'Ring', 'RNG', [['Ladies Ring'], ['Gents Ring'], 'Baby Ring', 'Couple Ring', 'Stone Ring', 'Plain Band', 'Navratna Ring']),
+    gold_1: G('Gold', 'Chain', 'CHN', [['Ladies Chain'], 'Gents Chain', 'Baby Chain', 'Rope Chain', 'Box Chain', 'Singapore Chain']),
+    gold_2: G('Gold', 'Mangalsutra', 'MNG', ['Short Mangalsutra', 'Long Mangalsutra', 'Vati Mangalsutra', 'Diamond Mangalsutra', 'Mangalsutra Pendant']),
+    gold_3: G('Gold', 'Kaan (Earrings)', 'EAR', [['Tops'], 'Jhumka', 'Bali', 'Chandbali', 'Kaan Chain', 'Baby Tops']),
+    gold_4: G('Gold', 'Chudi / Kada', 'BNG', [['Chudi'], ['Kangan'], 'Ladies Kada', 'Gents Kada', 'Baby Kada', 'Bracelet']),
+    gold_5: G('Gold', 'Haar / Set', 'SET', ['Necklace Set', 'Rani Haar', 'Choker Set', 'Long Haar', 'Temple Set']),
+    gold_6: G('Gold', 'Pendant / Locket', 'PND', ['God Pendant', 'Om Pendant', 'Letter Pendant', 'Locket', 'Pendant Set']),
+    gold_7: G('Gold', 'Nath / Tikka', 'NTH', ['Nath', 'Nose Pin', 'Laung', 'Mang Tikka', 'Matha Patti']),
+    gold_8: G('Gold', 'Coin / Biscuit', 'GCN', ['Gold Coin 1gm', 'Gold Coin 5gm', 'Gold Coin 10gm', 'Laxmi Coin', 'Gold Biscuit']),
+    // ----- SILVER -----
+    silver_0: G('Silver', 'Payal', 'PYL', [['Plain Payal'], 'Ghungroo Payal', 'Heavy Payal', 'Baby Payal', 'Pajeb']),
+    silver_1: G('Silver', 'Bichhiya', 'BCH', [['Plain Bichhiya'], 'Designer Bichhiya', 'Chhalla']),
+    silver_2: G('Silver', 'Kada / Chain', 'SKD', [['Silver Kada'], 'Silver Bracelet', 'Silver Chain', 'Kamarbandh', 'Silver Rakhi']),
+    silver_3: G('Silver', 'Bartan', 'BRT', ['Glass', 'Thali', 'Katori', 'Chammach', 'Lota', 'Baby Feeding Set'], 'loose'),
+    silver_4: G('Silver', 'Pooja Saman', 'PJA', ['Pooja Thali', 'Diya', 'Kalash', 'Ghanti', 'Murti', 'Chhatra'], 'loose'),
+    silver_5: G('Silver', 'Coin / Siki', 'SCN', ['Silver Coin 10gm', 'Silver Coin 20gm', 'Silver Coin 50gm', 'Laxmi-Ganesh Coin', 'Silver Biscuit'], 'tag'),
+    // ----- ARTIFICIAL -----
+    artificial_0: G('Artificial', 'Set', 'ASET', ['Necklace Set', 'Bridal Set', 'Kundan Set', 'AD Set', 'Oxidised Set'], 'tag'),
+    artificial_1: G('Artificial', 'Kaan (Earrings)', 'AEAR', ['Jhumka', 'Tops', 'Bali', 'Chandbali'], 'tag'),
+    artificial_2: G('Artificial', 'Chudi / Kangan', 'ABNG', ['Chudi', 'Kangan', 'Kada', 'Lakh Chudi'], 'tag'),
+    artificial_3: G('Artificial', 'Other', 'AOTH', ['Mang Tikka', 'Nath', 'Payal', 'Ring', 'Juda Pin'], 'tag'),
+    // ----- STONE (Ratna) -----
+    stone_0: G('Stone', 'Navratna', 'RTN', ['Manik (Ruby)', 'Panna (Emerald)', 'Pukhraj (Yellow Sapphire)', 'Neelam (Blue Sapphire)', 'Moti (Pearl)', 'Moonga (Coral)', 'Gomed', 'Lehsuniya (Cat\'s Eye)', 'Heera (Diamond)'], 'tag'),
+    stone_1: G('Stone', 'Upratna / Other', 'UPR', ['Opal', 'Firoza (Turquoise)', 'Sphatik', 'American Diamond (AD)', 'Navratna Set'], 'tag'),
+    // ----- FRANCHISE (brand / store stock) -----
+    franchise_0: G('Franchise', 'Ring', 'FRG', ['Ladies Ring', 'Gents Ring', 'Diamond Ring', 'Couple Band'], 'tag'),
+    franchise_1: G('Franchise', 'Chain', 'FCH', ['Ladies Chain', 'Gents Chain', 'Light Weight Chain'], 'tag'),
+    franchise_2: G('Franchise', 'Kaan (Earrings)', 'FER', ['Tops', 'Jhumka', 'Diamond Tops', 'Bali'], 'tag'),
+    franchise_3: G('Franchise', 'Set / Mangalsutra', 'FST', ['Necklace Set', 'Pendant Set', 'Mangalsutra', 'Diamond Set'], 'tag'),
+    franchise_4: G('Franchise', 'Coin', 'FCN', ['Gold Coin 1gm', 'Gold Coin 5gm', 'Gold Coin 10gm'], 'tag')
+  };
+
+
+  // ================= ADDED LOG (browser me yaad rehta hai) =================
+  // Real app me ye list backend (items table) se aayegi
+  const LOG_KEY = 'ju-quick-stock-log';
+  let addedLog = [];
+  try { addedLog = JSON.parse(localStorage.getItem(LOG_KEY)) || []; } catch (e) {}
+  const saveLog = () => { try { localStorage.setItem(LOG_KEY, JSON.stringify(addedLog)); } catch (e) {} };
+  // Pichli baar bane items ko wapas "shop me hai" mark karo
+  addedLog.forEach(l => {
+    if (!catalog[l.gid]) catalog[l.gid] = G(l.material, l.jewellery_type, l.tag_prefix, []);
+    let it = catalog[l.gid].items.find(i => i.item_name === l.item_name);
+    if (!it) { it = { item_name: l.item_name, tag_prefix: l.tag_prefix, method: l.method }; catalog[l.gid].items.push(it); }
+    it.already_have = true;
+  });
+
+  // ================= STATE =================
+  let selected = {};          // { "gold_0|Gold Solitaire Ring 22K": true }
+  let curMat = 'Gold';
+  let curGroup = 'gold_0';
+  let hideExisting = false;
+
+  const key = (gid, n) => gid + '|' + n;
+  const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const ready = gid => catalog[gid].items.filter(i => !i.already_have);
+  const selIn = gid => ready(gid).filter(i => selected[key(gid, i.item_name)]).length;
+  const groupsOf = m => Object.keys(catalog).filter(gid => catalog[gid].material === m);
+  const splitKey = k => { const p = k.split('|'); return [p[0], p.slice(1).join('|')]; };
+
+  // Backend ko jaane wala item (senior ke format jaisa)
+  function payloadItem(gid, item) {
+    const g = catalog[gid];
+    return {
+      item_name: item.item_name, material: g.material, group_name: g.group_name, jewellery_type: g.jewellery_type,
+      hsn_code: g.hsn_code, gst_rate: g.gst_rate, karet: g.karet, tunch: g.tunch, wastage: g.wastage,
+      stock_method: item.method, tag_prefix: item.tag_prefix, tag_digit: 4, mode: 'master_only'
+    };
+  }
+
+  // ================= RENDER =================
+  function renderTop() {
+    let total = 0, exist = 0;
+    Object.values(catalog).forEach(g => { total += g.items.length; exist += g.items.filter(i => i.already_have).length; });
+    $('#stats').html(`<b>${total}</b> items • <b style="color:var(--green)">${exist}</b> shop me • <b style="color:var(--orange)">${total - exist}</b> ready`);
+    const sel = Object.keys(selected).length;
+    $('#selCount').text(sel);
+    $('#btnCreate').prop('disabled', !sel).text(sel ? `⚡ ${sel} Items Banao` : '⚡ Items Banao');
+  }
+
+  function renderMats() {
+    $('#mats').addClass('has-active').html(MATERIALS.map(m => {
+      const gids = groupsOf(m);
+      const items = gids.reduce((a, g) => a + catalog[g].items.length, 0);
+      const rdy = gids.reduce((a, g) => a + ready(g).length, 0);
+      const sel = gids.reduce((a, g) => a + selIn(g), 0);
+      return `<button class="mat ${m === curMat ? 'active' : ''}" data-m="${m}">
+        <div class="mat-top">
+          <span class="mat-ico" style="--c:${MAT_COLOR[m]}">${MAT_ICON[m]}${sel ? `<span class="sel-badge">${sel}✓</span>` : ''}</span>
+          <span><b>${m}</b><span class="sub">${MAT_SUB[m]}</span></span>
+        </div>
+        <div class="mat-stats">
+          <div><small>TYPES</small><strong>${gids.length}</strong></div>
+          <div><small>ITEMS</small><strong>${items}</strong></div>
+          <div class="rdy"><small>READY</small><strong>${rdy}</strong></div>
+        </div>
+      </button>`;
+    }).join(''));
+  }
+
+  function renderTypes() {
+    $('#types').html(groupsOf(curMat).map(gid => {
+      const g = catalog[gid], r = ready(gid).length, s = selIn(gid);
+      const cnt = !r ? '<span class="cnt done">✓ Sab hai</span>'
+                : s ? `<span class="cnt on">${s}/${r} ✓</span>` : `<span class="cnt">${r} ready</span>`;
+      return `<button class="type ${gid === curGroup ? 'active' : ''}" data-gid="${gid}">
+        ${micon(g.material, typeIcon(g.jewellery_type))}${esc(g.jewellery_type)}${cnt}</button>`;
+    }).join('') + `<button class="type add-type" id="btnAddType">+ Naya Type banao</button>`);
+  }
+
+  function rowHtml(gid, item, showGroup) {
+    const g = catalog[gid];
+    const on = !!selected[key(gid, item.item_name)];
+    const sub = item.already_have ? '✓ Shop me pehle se hai'
+              : `${showGroup ? esc(g.material + ' • ' + g.jewellery_type) + ' • ' : ''}Tag: ${esc(item.tag_prefix)}`;
+    return `<button class="row ${item.already_have ? 'done' : on ? 'on' : ''}" data-gid="${gid}" data-name="${esc(item.item_name)}">
+      ${CHECK}<span><div class="row-name">${esc(item.item_name)}</div><div class="row-sub">${sub}</div></span></button>`;
+  }
+
+  function renderItems() {
+    const q = $('#search').val().trim().toLowerCase();
+
+    // Search mode: saare materials me dhoondo
+    if (q) {
+      $('#itemsHead').html(`<div><h3>Search: "${esc(q)}"</h3><p>Saare materials me se results</p></div>`);
+      $('#newItemWrap').hide();
+      const rows = [];
+      Object.keys(catalog).forEach(gid => catalog[gid].items.forEach(i => {
+        if (i.item_name.toLowerCase().includes(q) || catalog[gid].jewellery_type.toLowerCase().includes(q)) rows.push(rowHtml(gid, i, true));
+      }));
+      $('#list').html(rows.join('') || '<p class="empty">Kuch nahi mila.</p>');
+      return;
+    }
+
+    $('#newItemWrap').show();
+    const g = catalog[curGroup];
+    const r = ready(curGroup).length, s = selIn(curGroup);
+    $('#itemsHead').html(`
+      ${micon(g.material, typeIcon(g.jewellery_type), true)}
+      <div><h3>${esc(g.material)} • ${esc(g.jewellery_type)}</h3><p>${g.items.length} items • ${g.items.length - r} shop me • ${r} ready</p></div>
+      <div class="head-actions">
+        <label class="prefix">Tag Prefix <input id="prefix" maxlength="10" value="${esc(g.tag_prefix)}"></label>
+        <label class="toggle-line"><input type="checkbox" id="hideExist" ${hideExisting ? 'checked' : ''}> Shop wale chhupao</label>
+        ${r ? `<button class="link-btn" id="btnAllType">${s === r ? 'Sab hatao' : 'Sab tick karo'}</button>` : ''}
+      </div>`);
+    const items = g.items.filter(i => !(hideExisting && i.already_have));
+    $('#list').html(items.map(i => rowHtml(curGroup, i)).join('') || '<p class="empty">Saare items shop me pehle se hain ✓</p>');
+  }
+
+  function renderAll() { renderTop(); renderMats(); renderTypes(); renderItems(); }
+
+  // ================= ACTIONS =================
+  const toast = (icon, title) => Swal.fire({ toast: true, position: 'top-end', icon, title, showConfirmButton: false, timer: 1600 });
+
+  function setGroup(gid, on) {
+    ready(gid).forEach(i => { const k = key(gid, i.item_name); if (on) selected[k] = true; else delete selected[k]; });
+  }
+
+  function createItems(keys) {
+    if (!keys.length) return;
+    const payload = keys.map(k => { const [gid, n] = splitKey(k); return payloadItem(gid, catalog[gid].items.find(i => i.item_name === n)); });
+    const groups = new Set(payload.map(p => p.group_name)).size;
+    Swal.fire({ title: 'Items ban rahe hain…', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+    // ===== Yahan AJAX call lagani hai =====
+    // $.post('/stock/quick-setup', { items: payload }).done(() => { ... })
+    console.log('Create payload:', payload);
+    setTimeout(() => {
+      keys.forEach(k => {
+        const [gid, n] = splitKey(k);
+        const it = catalog[gid].items.find(i => i.item_name === n);
+        if (it) {
+          it.already_have = true;      // ab "shop me hai" ban gaya
+          const g = catalog[gid];
+          addedLog.unshift({ gid, item_name: it.item_name, material: g.material, jewellery_type: g.jewellery_type,
+            group_name: g.group_name, tag_prefix: it.tag_prefix, method: it.method, hsn_code: g.hsn_code, at: Date.now() });
+        }
+        delete selected[k];
+      });
+      saveLog();
+      renderAll();
+      Swal.fire({
+        icon: 'success', title: 'Ho gaya!',
+        html: `<div class="sw-sum"><div><span>Groups</span><b>${groups}</b></div><div><span>Items bane</span><b>${payload.length}</b></div></div>`,
+        showCancelButton: true, confirmButtonText: '☰ List dekho', cancelButtonText: 'Aur add karo'
+      }).then(r => { if (r.isConfirmed) location.hash = 'list'; });
+    }, 900);
+  }
+
+  function addCustomItem(name) {
+    const g = catalog[curGroup];
+    if (g.items.some(i => i.item_name.toLowerCase() === name.toLowerCase())) { toast('info', 'Ye item already list me hai'); return; }
+    g.items.unshift({ item_name: name, already_have: false, tag_prefix: g.tag_prefix, method: 'both' });
+    selected[key(curGroup, name)] = true;
+    renderAll();
+    toast('success', `"${name}" add aur tick ho gaya`);
+  }
+
+  // ================= EVENTS =================
+  // Step 1: material
+  $('#mats').on('click', '.mat', function () {
+    curMat = $(this).data('m');
+    curGroup = groupsOf(curMat)[0];
+    $('#search').val('');
+    renderAll();
+  });
+
+  // Step 2: type
+  $('#types').on('click', '.type[data-gid]', function () {
+    curGroup = $(this).data('gid');
+    $('#search').val('');
+    renderAll();
+  });
+
+  // Step 3: item tick
+  $('#list').on('click', '.row:not(.done)', function () {
+    const k = key($(this).data('gid'), $(this).data('name'));
+    if (selected[k]) delete selected[k]; else selected[k] = true;
+    renderAll();
+  });
+  $('#itemsHead').on('click', '#btnAllType', function () {
+    setGroup(curGroup, selIn(curGroup) < ready(curGroup).length);
+    renderAll();
+  });
+  $('#itemsHead').on('change', '#hideExist', function () { hideExisting = this.checked; renderItems(); });
+  $('#itemsHead').on('change', '#prefix', function () {
+    const p = ($(this).val().trim() || 'TAG').toUpperCase();
+    const g = catalog[curGroup];
+    g.tag_prefix = p;
+    g.items.forEach(i => { if (!i.already_have) i.tag_prefix = p; });
+    renderItems();
+    toast('success', `Tag prefix "${p}" laga diya`);
+  });
+  $('#newItem').on('keydown', function (e) {
+    if (e.key !== 'Enter') return;
+    const n = $(this).val().trim();
+    if (n) { addCustomItem(n); $(this).val(''); }
+  });
+  $('#search').on('input', renderItems);
+
+  // Naya type (custom group)
+  $('#btnNewTop').on('click', () => $('#btnAddType').trigger('click'));
+  $('#types').on('click', '#btnAddType', function () {
+    Swal.fire({
+      title: `Naya ${curMat} Type`,
+      html: `<div class="sw-form">
+          <label>Type ka naam <input id="cgType" placeholder="e.g. Kada, Bracelet, Nath"></label>
+          <label>Items (har line me ek) <textarea id="cgItems" rows="4" placeholder="Plain Kada&#10;Designer Kada"></textarea></label>
+          <div class="sw-note">HSN ${MAT_DEFAULTS[curMat].hsn_code}${MAT_DEFAULTS[curMat].karet !== '0' ? ' • Purity ' + MAT_DEFAULTS[curMat].karet : ''} apne aap lagega</div>
+        </div>`,
+      showCancelButton: true, confirmButtonText: 'Banao', cancelButtonText: 'Cancel',
+      didOpen: () => $('#cgType').trigger('focus'),
+      preConfirm: () => {
+        const type = $('#cgType').val().trim();
+        if (!type) { Swal.showValidationMessage('Type ka naam likho'); return false; }
+        const items = $('#cgItems').val().split(/[\n,]+/).map(s => s.trim()).filter(Boolean);
+        return { type, items: items.length ? items : [`${curMat} ${type}`] };
+      }
+    }).then(r => {
+      if (!r.isConfirmed) return;
+      const gid = curMat.toLowerCase() + '_c' + Date.now();
+      catalog[gid] = G(curMat, r.value.type, r.value.type.slice(0, 3).toUpperCase(), r.value.items);
+      setGroup(gid, true);
+      curGroup = gid;
+      renderAll();
+      toast('success', `"${r.value.type}" type ban gaya`);
+    });
+  });
+
+  // Bottom bar
+  $('#btnClear').on('click', () => { selected = {}; renderAll(); });
+  $('#btnCreate').on('click', () => createItems(Object.keys(selected)));
+  $('#btnView').on('click', function () {
+    const keys = Object.keys(selected);
+    if (!keys.length) { toast('info', 'Abhi kuch select nahi hai'); return; }
+    const byGroup = {};
+    keys.forEach(k => { const [gid, n] = splitKey(k); (byGroup[gid] = byGroup[gid] || []).push(n); });
+    Swal.fire({
+      title: `${keys.length} items banenge`,
+      html: `<div class="sw-sum">${Object.entries(byGroup).map(([gid, ns]) =>
+        `<div class="grp">${esc(catalog[gid].material + ' • ' + catalog[gid].jewellery_type)}</div>` + ns.map(n => `<div><span>${esc(n)}</span></div>`).join('')).join('')}</div>`,
+      showCancelButton: true, confirmButtonText: `⚡ ${keys.length} Items Banao`, cancelButtonText: 'Wapas'
+    }).then(r => { if (r.isConfirmed) createItems(keys); });
+  });
+
+  // Sab setup karo
+  $('#btnSetupAll').on('click', function () {
+    const all = [], perMat = {};
+    Object.keys(catalog).forEach(gid => ready(gid).forEach(i => {
+      all.push(key(gid, i.item_name));
+      perMat[catalog[gid].material] = (perMat[catalog[gid].material] || 0) + 1;
+    }));
+    if (!all.length) { toast('info', 'Saare items already shop me hain'); return; }
+    Swal.fire({
+      title: 'Saare ready items banaye?',
+      html: `<div class="sw-sum">${Object.entries(perMat).map(([m, n]) => `<div><span>${m}</span><b>${n}</b></div>`).join('')}
+             <div style="border-top:1px solid var(--line);padding-top:6px"><span>Total</span><b style="color:var(--orange)">${all.length} items</b></div></div>
+             <p class="sw-note" style="margin-top:10px">Shop me jo pehle se hain, wo dobara nahi banenge.</p>`,
+      showCancelButton: true, confirmButtonText: 'Haan, banao', cancelButtonText: 'Cancel'
+    }).then(r => { if (r.isConfirmed) createItems(all); });
+  });
+
+  // ================= LIST PAGE =================
+  let lMat = 'All', lFilter = 'all';
+  const fmt = t => new Date(t).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+
+  function stockRows() {
+    const logMap = {};
+    addedLog.forEach(l => { logMap[key(l.gid, l.item_name)] = l.at; });
+    const rows = [];
+    Object.keys(catalog).forEach(gid => catalog[gid].items.forEach(i => {
+      if (!i.already_have) return;
+      const g = catalog[gid];
+      rows.push({ gid, g, i, at: logMap[key(gid, i.item_name)] || 0 });
+    }));
+    return rows.sort((a, b) => b.at - a.at);   // naye upar
+  }
+
+  function renderList() {
+    const all = stockRows();
+    // Material cards
+    const cnt = m => all.filter(r => m === 'All' || r.g.material === m).length;
+    $('#lCards').html(['All', ...MATERIALS].map(m => `
+      <button class="l-card ${m === lMat ? 'active' : ''}" data-m="${m}">
+        ${m === 'All' ? '<span class="mico lg" style="--c:var(--navy)">' + svg('<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h8M8 17h5"/>') + '</span>'
+                      : micon(m, MAT_ICON[m], true)}
+        <span><small>${m === 'All' ? 'Total Items' : m}</small><b>${cnt(m)}</b></span>
+      </button>`).join(''));
+
+    $('#lSeg button').each(function () {
+      const on = $(this).data('f') === lFilter;
+      $(this).css({ background: on ? 'var(--navy)' : 'transparent', color: on ? '#fff' : 'var(--muted)' });
+    });
+
+    const q = $('#lSearch').val().trim().toLowerCase();
+    const rows = all.filter(r =>
+      (lMat === 'All' || r.g.material === lMat) &&
+      (lFilter === 'all' || (lFilter === 'new' ? r.at : !r.at)) &&
+      (!q || (r.i.item_name + ' ' + r.g.jewellery_type + ' ' + r.i.tag_prefix).toLowerCase().includes(q)));
+
+    $('#lBody').html(rows.map((r, n) => `
+      <tr class="${r.at ? 'new-row' : ''}">
+        <td>${n + 1}</td>
+        <td><div class="td-item">${micon(r.g.material, typeIcon(r.g.jewellery_type))}${esc(r.i.item_name)}</div></td>
+        <td>${esc(r.g.material)}</td>
+        <td>${esc(r.g.jewellery_type)}<div style="font-size:12px;color:var(--muted)">${esc(r.g.group_name)}</div></td>
+        <td><span class="tag-pill grey">${esc(r.i.tag_prefix)}</span></td>
+        <td style="text-transform:capitalize">${esc(r.i.method)}</td>
+        <td>${esc(r.g.hsn_code)}</td>
+        <td>${r.at ? `<span class="tag-pill new">Abhi bana • ${fmt(r.at)}</span>` : '<span class="tag-pill old">Pehle se</span>'}</td>
+      </tr>`).join('') || '<tr><td colspan="8" class="empty">Koi item nahi mila.</td></tr>');
+  }
+
+  $('#lCards').on('click', '.l-card', function () { lMat = $(this).data('m'); renderList(); });
+  $('#lSeg').on('click', 'button', function () { lFilter = $(this).data('f'); renderList(); });
+  $('#lSearch').on('input', renderList);
+
+  // ================= PAGE SWITCH (#list = list page) =================
+  // Real app me LIST button seedha list route par jayega
+  function route() {
+    const isList = location.hash === '#list';
+    $('#viewSetup').toggleClass('show', !isList);
+    $('#viewList').toggleClass('show', isList);
+    if (isList) renderList(); else renderAll();
+    window.scrollTo(0, 0);
+  }
+  $(window).on('hashchange', route);
+
+  route();
+});
+</script>
+</body>
+</html>

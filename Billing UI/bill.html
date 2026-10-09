@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Jewellery Bill</title>
+    <style>
+        :root {
+            --purple: #efe9fb;
+            --purple-dark: #7c5cd6;
+            --orange: #f5a623;
+            --teal: #12b8a6;
+            --blue: #3b82f6;
+            --pink: #ec4899;
+            --gray-bg: #f5f6f8;
+            --border: #e4e6eb;
+            --text: #2b2b33;
+            --muted: #9a9ba5;
+            --red: #e33636;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(180deg, #f6f4ff 0%, #fafbfc 220px);
+            margin: 0;
+            padding: 10px 14px;
+            color: var(--text);
+        }
+
+        .wrap {
+            max-width: 1720px;
+            margin: 0 auto;
+        }
+
+        /* Top row */
+        .top-row {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr 220px 220px;
+            gap: 12px;
+            margin-bottom: 8px;
+            align-items: end;
+        }
+
+        label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .05em;
+            color: #333;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .input-pill {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            border: 1.5px solid var(--blue);
+            border-radius: 20px;
+            height: 34px;
+            padding: 0 12px;
+        }
+
+        .input-pill input {
+            border: none;
+            background: transparent;
+            outline: none;
+            flex: 1;
+            font-size: 13px;
+            color: var(--text);
+        }
+
+        .input-pill input::placeholder {
+            color: var(--muted);
+        }
+
+        .icon-circle {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 6px;
+            flex-shrink: 0;
+            color: #fff;
+            font-size: 11px;
+        }
+
+        .date-box,
+        .billno-box {
+            background: #fff;
+            border: 1.5px solid var(--teal);
+            border-radius: 8px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+        }
+
+        .date-box input {
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 13px;
+            width: 100%;
+        }
+
+        .billno-box {
+            font-weight: 800;
+            justify-content: center;
+            color: #fff;
+            font-size: 13px;
+            background: linear-gradient(135deg, var(--pink), var(--orange));
+            border: none;
+        }
+
+        .billno-wrap label {
+            white-space: nowrap;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 0 0 1px var(--border);
+        }
+
+        thead th {
+            background: linear-gradient(90deg, #7c5cd6, #3b82f6);
+            color: #fff;
+            font-size: 11px;
+            letter-spacing: .04em;
+            text-align: left;
+            padding: 8px 10px;
+            font-weight: 700;
+        }
+
+        tbody td {
+            padding: 5px 10px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #faf9ff;
+        }
+
+        .sn-cell {
+            text-align: center;
+            width: 56px;
+            font-size: 13px;
+        }
+
+        .gold-tag {
+            display: inline-block;
+            background: linear-gradient(135deg, #f5c451, #f5a623);
+            color: #5b3d00;
+            font-size: 9px;
+            font-weight: 800;
+            padding: 1px 7px;
+            border-radius: 6px;
+            margin-top: 3px;
+        }
+
+        .item-input-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .item-input-row input {
+            flex: 1;
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            padding: 5px 8px;
+            font-size: 12px;
+            outline: none;
+        }
+
+        .cam-btn {
+            width: 26px;
+            height: 26px;
+            border-radius: 7px;
+            border: 1px solid var(--border);
+            background: var(--gray-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
+            color: #666;
+            flex-shrink: 0;
+        }
+
+        .carat-row {
+            display: flex;
+            gap: 5px;
+        }
+
+        .carat-row select,
+        .carat-row input {
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            padding: 5px 6px;
+            font-size: 12px;
+            outline: none;
+            background: #fff;
+        }
+
+        .carat-row select {
+            width: 66px;
+        }
+
+        .carat-row input {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .num-field {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            padding: 0 7px;
+            height: 28px;
+        }
+
+        .num-field span.prefix {
+            font-size: 11px;
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        .num-field input {
+            border: none;
+            outline: none;
+            background: transparent;
+            text-align: right;
+            font-size: 13px;
+            width: 100%;
+            padding: 0;
+        }
+
+        .num-field select {
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 12px;
+            color: #333;
+        }
+
+        .total-cell {
+            text-align: right;
+            font-weight: 700;
+            font-size: 13px;
+            color: var(--purple-dark);
+        }
+
+        .total-cell .lbl {
+            color: var(--muted);
+            font-weight: 600;
+            font-size: 11px;
+            margin-right: 5px;
+        }
+
+        .add-row td {
+            padding: 6px 10px;
+        }
+
+        .add-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--orange), var(--pink));
+            color: #fff;
+            border: none;
+            font-size: 17px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 0;
+            box-shadow: 0 2px 6px rgba(236, 72, 153, .35);
+        }
+
+        .sum-row td {
+            background: var(--purple);
+            font-weight: 700;
+            text-align: right;
+            padding: 7px 14px;
+            font-size: 13px;
+        }
+
+        .sum-row .sum-box {
+            display: inline-block;
+            background: #fff;
+            border: 1.5px solid var(--purple-dark);
+            border-radius: 7px;
+            padding: 4px 14px;
+            min-width: 100px;
+            text-align: right;
+            color: var(--purple-dark);
+        }
+
+        .del-btn {
+            background: none;
+            border: none;
+            color: #d55;
+            cursor: pointer;
+            font-size: 13px;
+            padding: 2px;
+        }
+
+        /* Bottom panels */
+        .bottom-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-top: 10px;
+        }
+
+        /* ---- Bill Payment / Bill Summary ---- */
+        .wf-panel {
+            padding: 12px 14px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 1px 8px rgba(60, 50, 120, .06);
+        }
+
+        .wf-title {
+            display: inline-block;
+            border: 2px solid var(--red);
+            border-radius: 8px;
+            padding: 5px 14px;
+            font-weight: 800;
+            color: var(--red);
+            font-size: 14px;
+            margin-bottom: 10px;
+            background: #fff5f5;
+        }
+
+        .wf-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .wf-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #333;
+            min-width: 70px;
+            text-transform: capitalize;
+        }
+
+        .wf-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 14px;
+            color: #111;
+            position: relative;
+        }
+
+        .wf-plus {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 2px solid var(--teal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            flex-shrink: 0;
+            color: var(--teal);
+            background: #fff;
+        }
+
+        .mode-dropdown {
+            display: none;
+            position: absolute;
+            top: 28px;
+            left: 0;
+            background: #fff;
+            border: 1.5px solid var(--teal);
+            border-radius: 8px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, .12);
+            z-index: 10;
+            min-width: 150px;
+            overflow: hidden;
+        }
+
+        .mode-dropdown.open {
+            display: block;
+        }
+
+        .mode-item {
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .mode-item:hover {
+            background: #e9fbf8;
+        }
+
+        .mode-item.selected {
+            color: var(--teal);
+        }
+
+        .mode-item .check {
+            font-size: 12px;
+            color: var(--teal);
+        }
+
+        .pay-rows {
+            margin-bottom: 6px;
+        }
+
+        .pay-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 7px;
+        }
+
+        .pay-row .wf-input {
+            flex: 1;
+            max-width: 170px;
+        }
+
+        .pay-row .rm {
+            background: none;
+            border: none;
+            color: #d55;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 0 2px;
+        }
+
+        .wf-input {
+            border: 1.5px solid var(--blue);
+            border-radius: 6px;
+            height: 30px;
+            padding: 0 10px;
+            font-size: 12px;
+            outline: none;
+            width: 170px;
+            text-align: right;
+        }
+
+        .wf-adv-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            border: 1.5px solid var(--orange);
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-weight: 700;
+            font-size: 12px;
+            background: #fff8ee;
+            cursor: pointer;
+            color: #a15b00;
+            margin-bottom: 8px;
+        }
+
+        .wf-adv-panel {
+            display: none;
+            border: 1.5px solid #f1e1a6;
+            border-radius: 8px;
+            padding: 8px;
+            margin: -2px 0 10px 0;
+            background: #fdf9ee;
+        }
+
+        .wf-adv-panel.open {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+        }
+
+        .wf-adv-panel label {
+            margin-bottom: 2px;
+        }
+
+        .wf-adv-panel input,
+        .wf-adv-panel select {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            height: 28px;
+            padding: 0 8px;
+            font-size: 11px;
+            outline: none;
+            background: #fff;
+        }
+
+        .wf-summary-box {
+            border: 1.5px solid var(--purple-dark);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .wf-summary-row {
+            display: grid;
+            grid-template-columns: 1fr 80px 90px;
+            border-bottom: 1px solid #e2d9f7;
+        }
+
+        .wf-summary-row:nth-child(odd) {
+            background: #faf8ff;
+        }
+
+        .wf-summary-row:last-child {
+            border-bottom: none;
+        }
+
+        .wf-summary-row .cell {
+            padding: 7px 10px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            border-left: 1px solid #e2d9f7;
+        }
+
+        .wf-summary-row .cell:first-child {
+            border-left: none;
+            font-weight: 700;
+            color: #111;
+        }
+
+        .wf-summary-row .cell input {
+            border: none;
+            outline: none;
+            background: transparent;
+            width: 100%;
+            text-align: right;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .wf-summary-row .cell.readout {
+            justify-content: flex-end;
+            font-weight: 700;
+            color: var(--purple-dark);
+        }
+
+        .wf-summary-row .cell.readout input {
+            border: none;
+            outline: none;
+            background: transparent;
+            width: 100%;
+            text-align: right;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--purple-dark);
+        }
+
+        .wf-total-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 7px;
+        }
+
+        .wf-total-row .wf-label {
+            min-width: auto;
+            font-size: 12px;
+        }
+
+        .wf-total-box {
+            border: 1.5px solid var(--teal);
+            border-radius: 6px;
+            height: 30px;
+            width: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 0 10px;
+            font-weight: 800;
+            font-size: 13px;
+            color: #0d8a7c;
+            background: #f1fbfa;
+        }
+
+        .wf-return {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            border: 2px solid var(--pink);
+            border-radius: 22px;
+            padding: 8px 16px;
+            font-weight: 800;
+            font-size: 13px;
+            color: #111;
+            margin-top: 6px;
+            justify-content: space-between;
+            background: #fff0f7;
+        }
+
+        .wf-return.show {
+            display: flex;
+        }
+
+        .wf-return .arrow {
+            font-size: 15px;
+            color: var(--pink);
+        }
+
+        .wf-return .val {
+            color: var(--pink);
+        }
+
+        @media (max-width:900px) {
+            .top-row {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .bottom-row {
+                grid-template-columns: 1fr;
+            }
+
+            .wf-adv-panel.open {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+
+        <div class="top-row">
+            <div>
+                <label>PARTY NAME</label>
+                <div class="input-pill">
+                    <span style="color:#999;">🔍</span>
+                    <input type="text" placeholder="Search...">
+                    <div class="icon-circle">👤</div>
+                </div>
+            </div>
+            <div>
+                <label>MOBILE</label>
+                <div class="input-pill">
+                    <span style="color:#999;">📞</span>
+                    <input type="tel" placeholder="Mobile">
+                </div>
+            </div>
+            <div>
+                <label>DATE:</label>
+                <div class="date-box">
+                    <input type="date" id="billDate">
+                </div>
+            </div>
+            <div class="billno-wrap">
+                <label>BILL NO:</label>
+                <div class="billno-box" id="billNo">000039</div>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th class="sn-cell">S.N.</th>
+                    <th>ITEM</th>
+                    <th>CARAT / PURITY</th>
+                    <th>WEIGHT</th>
+                    <th>RATE</th>
+                    <th>MAKING</th>
+                    <th>OTHER</th>
+                    <th style="text-align:right;">TOTAL</th>
+                </tr>
+            </thead>
+            <tbody id="itemsBody"></tbody>
+            <tfoot>
+                <tr class="add-row">
+                    <td colspan="8">
+                        <button class="add-btn" id="addRowBtn">+</button>
+                    </td>
+                </tr>
+                <tr class="sum-row">
+                    <td colspan="6"></td>
+                    <td>SUM</td>
+                    <td><span class="sum-box" id="sumTotal">0.00</span></td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <div class="bottom-row">
+            <!-- Bill Payment -->
+            <div class="wf-panel">
+                <div class="wf-title">Bill Payment</div>
+
+                <div class="wf-row" style="position:relative;">
+                    <span class="wf-label" style="min-width:60px;">Pay with</span>
+                    <div class="wf-toggle">
+                        <div class="wf-plus" id="payModeToggle">+</div>
+                        <div class="mode-dropdown" id="modeDropdown">
+                            <div class="mode-item" data-mode="cash">Cash <span class="check"></span></div>
+                            <div class="mode-item" data-mode="card">Card <span class="check"></span></div>
+                            <div class="mode-item" data-mode="upi">UPI <span class="check"></span></div>
+                            <div class="mode-item" data-mode="bank">Bank Transfer <span class="check"></span></div>
+                            <div class="mode-item" data-mode="cheque">Cheque <span class="check"></span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pay-rows" id="payRows"></div>
+
+                <button class="wf-adv-btn" id="advToggleBtn">
+                    <span>Advance Payment</span><span id="advPlusIcon">+</span>
+                </button>
+                <div class="wf-adv-panel" id="advPanel">
+                    <div>
+                        <label>ADV CASH AMT</label>
+                        <input type="number" id="advCash" placeholder="Cash Amt">
+                    </div>
+                    <div>
+                        <label>ADV BANK NAME</label>
+                        <select id="advBank">
+                            <option>Choose Bank</option>
+                            <option>SBI</option>
+                            <option>HDFC</option>
+                            <option>ICICI</option>
+                            <option>Axis</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>ADV ONLINE AMT</label>
+                        <input type="number" id="advOnline" placeholder="Online Amt">
+                    </div>
+                </div>
+
+                <div class="wf-total-row">
+                    <span class="wf-label" style="min-width:auto;">Total Payment</span>
+                    <div class="wf-total-box" id="totalPaymentBox">0</div>
+                </div>
+            </div>
+
+            <!-- Bill Summary -->
+            <div class="wf-panel">
+                <div class="wf-title">Bill Summary</div>
+
+                <div class="wf-summary-box">
+                    <div class="wf-summary-row">
+                        <div class="cell">sub total</div>
+                        <div class="cell readout"><input type="text" id="subTotal" value="0.00"></div>
+                        <div class="cell readout">Rs</div>
+                    </div>
+                    <div class="wf-summary-row">
+                        <div class="cell">GST</div>
+                        <div class="cell"><input type="number" id="gstPercent" value="3">%</div>
+                        <div class="cell readout"><input type="text" id="gstAmt" value="0.00"></div>
+                    </div>
+                    <div class="wf-summary-row">
+                        <div class="cell">Discount</div>
+                        <div class="cell"><input type="number" id="discountPercent" value="0">%</div>
+                        <div class="cell readout"><input type="text" id="discountAmt" value="0.00"></div>
+                    </div>
+                </div>
+
+                <div class="wf-total-row">
+                    <span class="wf-label" style="min-width:auto;">Total Amount :</span>
+                    <div class="wf-total-box" id="totalAmount">0</div>
+                </div>
+
+                <div class="wf-total-row">
+                    <span class="wf-label" style="min-width:auto;">Total Payment :</span>
+                    <div class="wf-total-box" id="totalPaymentBox2">0</div>
+                </div>
+
+                <div class="wf-return" id="returnBox">
+                    <span class="arrow">⬅</span>
+                    <span>Return Amount :</span>
+                    <span class="val" id="returnAmount">0.00</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let rowCount = 0;
+        const selectedModes = ['cash']; // default cash always shown
+
+        function addRow() {
+            rowCount++;
+            const tbody = document.getElementById('itemsBody');
+            const tr = document.createElement('tr');
+            tr.dataset.row = rowCount;
+            tr.innerHTML = `
+    <td class="sn-cell">
+      ${rowCount}<br><span class="gold-tag">GOLD</span>
+    </td>
+    <td>
+      <div class="item-input-row">
+        <input type="text" class="item-name" placeholder="Item Name">
+        <div class="cam-btn">📷</div>
+      </div>
+    </td>
+    <td>
+      <div class="carat-row">
+        <select class="karat">
+          <option>24K</option><option>22K</option><option>18K</option><option>14K</option>
+        </select>
+        <input type="text" class="tunch" placeholder="Tunch">
+      </div>
+    </td>
+    <td>
+      <div class="num-field">
+        <span class="prefix">Qty</span>
+        <input type="number" class="weight" value="">
+        <select class="unit"><option>Gm.</option><option>Kg.</option></select>
+      </div>
+    </td>
+    <td>
+      <div class="num-field">
+        <input type="number" class="rate" value="">
+        <span class="prefix">Rs.</span>
+      </div>
+    </td>
+    <td>
+      <div class="num-field">
+        <input type="number" class="making" value="0">
+        <span class="prefix">Rs.</span>
+      </div>
+    </td>
+    <td>
+      <div class="num-field">
+        <input type="number" class="other" value="0">
+        <span class="prefix">Rs.</span>
+      </div>
+    </td>
+    <td class="total-cell">
+      <span class="lbl">Total</span><span class="row-total">0.00</span> Rs
+      <div><button class="del-btn" onclick="removeRow(this)">✕ remove</button></div>
+    </td>
+  `;
+            tbody.appendChild(tr);
+
+            tr.querySelectorAll('.weight, .rate, .making, .other').forEach(inp => {
+                inp.addEventListener('input', calcAll);
+            });
+        }
+
+        function removeRow(btn) {
+            btn.closest('tr').remove();
+            calcAll();
+        }
+
+        /* ---- Payment mode rows ---- */
+        function renderPayRows() {
+            const wrap = document.getElementById('payRows');
+            wrap.innerHTML = '';
+            selectedModes.forEach(mode => {
+                const row = document.createElement('div');
+                row.className = 'pay-row';
+                row.dataset.mode = mode;
+                const canRemove = mode !== 'cash';
+                row.innerHTML = `
+      <span class="wf-label" style="min-width:70px;">${mode}</span>
+      <input type="number" class="wf-input pay-amt" placeholder="0">
+      ${canRemove ? '<button class="rm" onclick="removeMode(this)">✕</button>' : '<span style="width:16px;"></span>'}
+    `;
+                wrap.appendChild(row);
+                row.querySelector('.pay-amt').addEventListener('input', recalcTotalFromSummary);
+            });
+
+            // sync checkmarks in dropdown
+            document.querySelectorAll('.mode-item').forEach(item => {
+                const m = item.dataset.mode;
+                if (selectedModes.includes(m)) {
+                    item.classList.add('selected');
+                    item.querySelector('.check').textContent = '✓';
+                } else {
+                    item.classList.remove('selected');
+                    item.querySelector('.check').textContent = '';
+                }
+            });
+        }
+
+        function removeMode(btn) {
+            const row = btn.closest('.pay-row');
+            const mode = row.dataset.mode;
+            const idx = selectedModes.indexOf(mode);
+            if (idx > -1) selectedModes.splice(idx, 1);
+            renderPayRows();
+            calcAll();
+        }
+
+        document.getElementById('payModeToggle').addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.getElementById('modeDropdown').classList.toggle('open');
+        });
+
+        document.getElementById('modeDropdown').addEventListener('click', (e) => {
+            const item = e.target.closest('.mode-item');
+            if (!item) return;
+            const mode = item.dataset.mode;
+            const idx = selectedModes.indexOf(mode);
+            if (idx > -1) {
+                selectedModes.splice(idx, 1);
+            } else {
+                selectedModes.push(mode);
+            }
+            renderPayRows();
+            calcAll();
+        });
+
+        document.addEventListener('click', () => {
+            document.getElementById('modeDropdown').classList.remove('open');
+        });
+
+        function calcAll() {
+            let sum = 0;
+            document.querySelectorAll('#itemsBody tr').forEach(tr => {
+                const weight = parseFloat(tr.querySelector('.weight').value) || 0;
+                const rate = parseFloat(tr.querySelector('.rate').value) || 0;
+                const making = parseFloat(tr.querySelector('.making').value) || 0;
+                const other = parseFloat(tr.querySelector('.other').value) || 0;
+                const rowTotal = (weight * rate) + making + other;
+                tr.querySelector('.row-total').textContent = rowTotal.toFixed(2);
+                sum += rowTotal;
+            });
+
+            document.getElementById('sumTotal').textContent = sum.toFixed(2);
+            document.getElementById('subTotal').value = sum.toFixed(2);
+
+            const gstPct = parseFloat(document.getElementById('gstPercent').value) || 0;
+            const discPct = parseFloat(document.getElementById('discountPercent').value) || 0;
+
+            const gstAmt = sum * gstPct / 100;
+            const discAmt = sum * discPct / 100;
+
+            document.getElementById('gstAmt').value = gstAmt.toFixed(2);
+            document.getElementById('discountAmt').value = discAmt.toFixed(2);
+
+            recalcTotalFromSummary();
+        }
+
+        function recalcTotalFromSummary() {
+            const subTotal = parseFloat(document.getElementById('subTotal').value) || 0;
+            const gstAmt = parseFloat(document.getElementById('gstAmt').value) || 0;
+            const discAmt = parseFloat(document.getElementById('discountAmt').value) || 0;
+
+            const total = subTotal + gstAmt - discAmt;
+            document.getElementById('totalAmount').textContent = Math.round(total);
+
+            let payTotal = 0;
+            document.querySelectorAll('.pay-amt').forEach(inp => {
+                payTotal += parseFloat(inp.value) || 0;
+            });
+            const advCash = parseFloat(document.getElementById('advCash').value) || 0;
+            const advOnline = parseFloat(document.getElementById('advOnline').value) || 0;
+            const paid = payTotal + advCash + advOnline;
+
+            document.getElementById('totalPaymentBox').textContent = paid.toFixed(2);
+            document.getElementById('totalPaymentBox2').textContent = paid.toFixed(2);
+
+            const ret = paid - total;
+            const returnBox = document.getElementById('returnBox');
+            if (ret > 0) {
+                returnBox.classList.add('show');
+                document.getElementById('returnAmount').textContent = ret.toFixed(2);
+            } else {
+                returnBox.classList.remove('show');
+            }
+        }
+
+        document.getElementById('addRowBtn').addEventListener('click', addRow);
+        document.getElementById('gstPercent').addEventListener('input', () => {
+            const subTotal = parseFloat(document.getElementById('subTotal').value) || 0;
+            const gstPct = parseFloat(document.getElementById('gstPercent').value) || 0;
+            document.getElementById('gstAmt').value = (subTotal * gstPct / 100).toFixed(2);
+            recalcTotalFromSummary();
+        });
+        document.getElementById('discountPercent').addEventListener('input', () => {
+            const subTotal = parseFloat(document.getElementById('subTotal').value) || 0;
+            const discPct = parseFloat(document.getElementById('discountPercent').value) || 0;
+            document.getElementById('discountAmt').value = (subTotal * discPct / 100).toFixed(2);
+            recalcTotalFromSummary();
+        });
+        document.getElementById('subTotal').addEventListener('input', recalcTotalFromSummary);
+        document.getElementById('gstAmt').addEventListener('input', recalcTotalFromSummary);
+        document.getElementById('discountAmt').addEventListener('input', recalcTotalFromSummary);
+        document.getElementById('advCash').addEventListener('input', recalcTotalFromSummary);
+        document.getElementById('advOnline').addEventListener('input', recalcTotalFromSummary);
+
+        document.getElementById('advToggleBtn').addEventListener('click', () => {
+            const panel = document.getElementById('advPanel');
+            const icon = document.getElementById('advPlusIcon');
+            panel.classList.toggle('open');
+            icon.textContent = panel.classList.contains('open') ? '−' : '+';
+        });
+
+        // default date = today
+        const today = new Date();
+        document.getElementById('billDate').value = today.toISOString().split('T')[0];
+
+        // init
+        renderPayRows();
+        addRow();
+        addRow();
+        calcAll();
+    </script>
+</body>
+
+</html>

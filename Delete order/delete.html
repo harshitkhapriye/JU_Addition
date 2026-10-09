@@ -1,0 +1,789 @@
+//https://claude.ai/artifact/Xf8iFmXhTZmeqaCHZeXrYq
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Order — Reversal Preview Mockup</title>
+    <style>
+        :root {
+            --bg: #e9e6f2;
+            --card: #ffffff;
+            --line: #eceaf3;
+            --line-strong: #e0ddec;
+            --text: #211f2e;
+            --text-muted: #7c7a8c;
+            --text-faint: #a6a4b3;
+            --purple: #6c5ce7;
+            --amber: #f2a72e;
+            --amber-soft: #fdf1de;
+            --orange: #f0821d;
+            --orange-soft: #fdead4;
+            --grey-soft: #f1f0f6;
+            --grey-line: #dcdae6;
+            --red: #e05a4e;
+            --red-soft: #fbe3e0;
+            --red-line: #f0bdb6;
+            --green: #3aa876;
+            --green-soft: #e1f2e8;
+            --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]) {
+                --bg: #15161c;
+                --card: #1e1f29;
+                --line: #2c2d3a;
+                --line-strong: #343544;
+                --text: #eceaf3;
+                --text-muted: #a09fb0;
+                --text-faint: #6d6c7c;
+                --amber-soft: #3a2f18;
+                --orange-soft: #3a2413;
+                --grey-soft: #262733;
+                --grey-line: #34354a;
+                --red-soft: #3a2222;
+                --red-line: #5c3630;
+                --green-soft: #1f3129;
+            }
+        }
+
+        :root[data-theme="dark"] {
+            --bg: #15161c;
+            --card: #1e1f29;
+            --line: #2c2d3a;
+            --line-strong: #343544;
+            --text: #eceaf3;
+            --text-muted: #a09fb0;
+            --text-faint: #6d6c7c;
+            --amber-soft: #3a2f18;
+            --orange-soft: #3a2413;
+            --grey-soft: #262733;
+            --grey-line: #34354a;
+            --red-soft: #3a2222;
+            --red-line: #5c3630;
+            --green-soft: #1f3129;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg);
+            font-family: var(--font);
+            color: var(--text);
+            padding: 34px 16px 70px;
+        }
+
+        .page-note {
+            max-width: 960px;
+            margin: 0 auto 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .page-note h1 {
+            font-size: 19px;
+            margin: 0 0 4px;
+            font-weight: 650;
+        }
+
+        .page-note p {
+            margin: 0;
+            font-size: 13.5px;
+            color: var(--text-muted);
+            max-width: 60ch;
+        }
+
+        .toggle-btn {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--purple);
+            background: var(--grey-soft);
+            border: 1px solid var(--grey-line);
+            padding: 7px 13px;
+            border-radius: 999px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        /* ---- background "order list" card (context) ---- */
+        .list-card {
+            max-width: 960px;
+            margin: 0 auto;
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 20px 45px -25px rgba(20, 15, 50, .25);
+        }
+
+        .list-head {
+            padding: 18px 22px;
+            border-bottom: 1px solid var(--line);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .list-head h3 {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 650;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13.5px;
+        }
+
+        thead th {
+            text-align: left;
+            font-size: 11.5px;
+            color: var(--text-muted);
+            padding: 12px 22px;
+            border-bottom: 1px solid var(--line);
+            font-weight: 650;
+        }
+
+        tbody td {
+            padding: 14px 22px;
+            border-bottom: 1px solid var(--line);
+            vertical-align: middle;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .oid-cell b {
+            font-family: var(--font-mono);
+            color: var(--purple);
+            font-size: 12.5px;
+        }
+
+        .oid-cell .sub {
+            display: block;
+            font-size: 11.5px;
+            color: var(--text-faint);
+            margin-top: 2px;
+        }
+
+        .status-pill {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 999px;
+        }
+
+        .status-pill.inprocess {
+            background: var(--orange-soft);
+            color: var(--orange);
+        }
+
+        .status-pill.pending {
+            background: var(--grey-soft);
+            color: var(--text-muted);
+        }
+
+        .amt {
+            font-weight: 650;
+        }
+
+        .row-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .icon-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 9px;
+            border: 1px solid var(--grey-line);
+            background: var(--grey-soft);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        .icon-btn.danger {
+            background: var(--red-soft);
+            border-color: var(--red-line);
+            color: var(--red);
+        }
+
+        .icon-btn.danger:hover {
+            filter: brightness(0.97);
+        }
+
+        .icon-btn svg {
+            width: 15px;
+            height: 15px;
+        }
+
+        /* ---- overlay + modal ---- */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(20, 16, 35, .45);
+            backdrop-filter: blur(2px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 50;
+        }
+
+        .overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            width: 100%;
+            max-width: 460px;
+            background: var(--card);
+            border-radius: 20px;
+            box-shadow: 0 30px 70px -20px rgba(10, 5, 30, .4);
+            overflow: hidden;
+            animation: pop .18s ease-out;
+        }
+
+        @keyframes pop {
+            from {
+                transform: scale(.96);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal-top {
+            padding: 24px 24px 16px;
+            text-align: center;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .warn-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: var(--red-soft);
+            color: var(--red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 14px;
+        }
+
+        .warn-icon svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .modal-top h2 {
+            margin: 0 0 6px;
+            font-size: 16.5px;
+            font-weight: 700;
+        }
+
+        .modal-top p {
+            margin: 0;
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .modal-top p b {
+            color: var(--text);
+            font-family: var(--font-mono);
+        }
+
+        .modal-body {
+            padding: 18px 24px 6px;
+        }
+
+        .body-label {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--text-faint);
+            letter-spacing: .02em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .rev-list {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+            margin-bottom: 8px;
+        }
+
+        .rev-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 13px;
+            border-radius: 12px;
+            background: var(--grey-soft);
+            border: 1px solid var(--line-strong);
+        }
+
+        .rev-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: none;
+        }
+
+        .rev-icon svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .rev-icon.stock {
+            background: var(--amber-soft);
+            color: #b3801a;
+        }
+
+        .rev-icon.udhar {
+            background: #e8e4fb;
+            color: var(--purple);
+        }
+
+        .rev-icon.cash {
+            background: var(--green-soft);
+            color: var(--green);
+        }
+
+        .rev-text {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .rev-title {
+            font-size: 12.5px;
+            color: var(--text-muted);
+        }
+
+        .rev-value {
+            font-size: 14.5px;
+            font-weight: 700;
+            font-family: var(--font-mono);
+        }
+
+        .rev-value.pos {
+            color: var(--green);
+        }
+
+        .rev-value.neg {
+            color: var(--red);
+        }
+
+        .rev-note {
+            font-size: 11px;
+            color: var(--text-faint);
+            margin-top: 1px;
+        }
+
+        .impact-note {
+            display: flex;
+            gap: 9px;
+            background: var(--orange-soft);
+            border: 1px solid #f2cfa0;
+            border-radius: 12px;
+            padding: 11px 13px;
+            margin: 14px 0 4px;
+            font-size: 12px;
+            color: #8a5c14;
+            line-height: 1.5;
+        }
+
+        .impact-note svg {
+            width: 16px;
+            height: 16px;
+            flex: none;
+            margin-top: 1px;
+            color: var(--orange);
+        }
+
+        .confirm-check {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin: 16px 0 4px;
+            font-size: 12.5px;
+            color: var(--text-muted);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .confirm-check input {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--red);
+            cursor: pointer;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            padding: 18px 24px 24px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 0;
+            border-radius: 12px;
+            font-size: 13.5px;
+            font-weight: 650;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .btn.ghost {
+            background: var(--grey-soft);
+            color: var(--text);
+            border-color: var(--grey-line);
+        }
+
+        .btn.ghost:hover {
+            background: var(--line-strong);
+        }
+
+        .btn.danger {
+            background: var(--red);
+            color: #fff;
+        }
+
+        .btn.danger:hover {
+            filter: brightness(1.05);
+        }
+
+        .btn.danger:disabled {
+            background: var(--grey-line);
+            color: var(--text-faint);
+            cursor: not-allowed;
+        }
+
+        /* ---- toast ---- */
+        .toast {
+            position: fixed;
+            bottom: 26px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--card);
+            border: 1px solid var(--line);
+            box-shadow: 0 20px 40px -15px rgba(10, 5, 30, .3);
+            border-radius: 14px;
+            padding: 13px 18px;
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            font-size: 13px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .2s, transform .2s;
+            z-index: 60;
+            max-width: 92vw;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+            pointer-events: auto;
+        }
+
+        .toast .t-icon {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--green-soft);
+            color: var(--green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: none;
+        }
+
+        .toast .t-icon svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .toast b {
+            display: block;
+            font-weight: 650;
+        }
+
+        .toast span.sub {
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .legend-row {
+            max-width: 960px;
+            margin: 18px auto 0;
+            font-size: 12px;
+            color: var(--text-faint);
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page-note">
+        <div>
+            <h1>Delete confirmation — reversal preview</h1>
+            <p>Click the delete icon on the order below to see exactly what gets reverted before anything actually
+                happens.</p>
+        </div>
+        <button class="toggle-btn" id="themeBtn">Toggle dark preview</button>
+    </div>
+
+    <div class="list-card">
+        <div class="list-head">
+            <h3>All Orders</h3>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Order</th>
+                    <th>Customer</th>
+                    <th>Status</th>
+                    <th>Balance</th>
+                    <th style="text-align:right;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="oid-cell"><b>#ORD-983012</b><span class="sub">Gold 3, Gold 2, Silver 1</span></td>
+                    <td>Piyush<br><span style="color:var(--text-faint);font-size:11.5px;">8962723423</span></td>
+                    <td><span class="status-pill inprocess">In Process</span></td>
+                    <td class="amt">₹4,510.00</td>
+                    <td>
+                        <div class="row-actions">
+                            <button class="icon-btn" title="View">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" />
+                                    <circle cx="12" cy="12" r="3" />
+                                </svg>
+                            </button>
+                            <button class="icon-btn" title="Edit">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 20h9" />
+                                    <path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z" />
+                                </svg>
+                            </button>
+                            <button class="icon-btn danger" id="openDelete" title="Delete order">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 6h18" />
+                                    <path d="M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2" />
+                                    <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
+                                </svg>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="oid-cell"><b>#ORD-597259</b><span class="sub">Silver 3</span></td>
+                    <td>Piyush<br><span style="color:var(--text-faint);font-size:11.5px;">8962723423</span></td>
+                    <td><span class="status-pill pending">Delivered</span></td>
+                    <td class="amt">₹1,750.00</td>
+                    <td>
+                        <div class="row-actions">
+                            <button class="icon-btn" title="View">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" />
+                                    <circle cx="12" cy="12" r="3" />
+                                </svg>
+                            </button>
+                            <button class="icon-btn" title="Edit">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 20h9" />
+                                    <path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z" />
+                                </svg>
+                            </button>
+                            <button class="icon-btn danger" title="Delete order — locked (delivered)"
+                                style="opacity:.4;cursor:not-allowed;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 6h18" />
+                                    <path d="M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2" />
+                                    <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
+                                </svg>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="legend-row">Delivered orders show the delete icon disabled — nothing to revert-test there.</div>
+
+    <!-- ===== overlay / modal ===== -->
+    <div class="overlay" id="overlay">
+        <div class="modal">
+            <div class="modal-top">
+                <div class="warn-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                        <line x1="12" y1="9" x2="12" y2="13" />
+                        <line x1="12" y1="17" x2="12.01" y2="17" />
+                    </svg>
+                </div>
+                <h2>Delete order <b style="font-family:inherit;">#ORD-983012</b>?</h2>
+                <p>This can't be undone. Before it's deleted, here's exactly what will be reversed:</p>
+            </div>
+
+            <div class="modal-body">
+                <div class="body-label">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 12l9-9 9 9" />
+                        <path d="M5 10v10h14V10" />
+                    </svg>
+                    WILL BE REVERTED
+                </div>
+
+                <div class="rev-list">
+                    <div class="rev-item">
+                        <div class="rev-icon stock">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 8l-9-5-9 5 9 5 9-5z" />
+                                <path d="M3 8v8l9 5 9-5V8" />
+                                <path d="M12 13v8" />
+                            </svg>
+                        </div>
+                        <div class="rev-text">
+                            <div class="rev-title">Stock — Gross weight</div>
+                            <div class="rev-note">Gold 3 + Gold 2 + Silver 1</div>
+                        </div>
+                        <div class="rev-value pos">+12.000g</div>
+                    </div>
+
+                    <div class="rev-item">
+                        <div class="rev-icon udhar">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="7" width="20" height="14" rx="2" />
+                                <path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16" />
+                            </svg>
+                        </div>
+                        <div class="rev-text">
+                            <div class="rev-title">Karigar Udhar — Sid &amp; Karigar First</div>
+                            <div class="rev-note">2.000g Gold, 5.000g Silver issued</div>
+                        </div>
+                        <div class="rev-value pos">− 2.0g Au / −5.0g Ag</div>
+                    </div>
+
+                    <div class="rev-item">
+                        <div class="rev-icon cash">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="1" x2="12" y2="23" />
+                                <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
+                            </svg>
+                        </div>
+                        <div class="rev-text">
+                            <div class="rev-title">Cash paid to Karigars</div>
+                            <div class="rev-note">SBI ₹200 + BOB ₹900</div>
+                        </div>
+                        <div class="rev-value pos">+₹1,100.00</div>
+                    </div>
+                </div>
+
+                <div class="impact-note">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="8" x2="12" y2="12" />
+                        <line x1="12" y1="16" x2="12.01" y2="16" />
+                    </svg>
+                    <span>Customer's ₹27,800 advance is not touched by this — settle that separately if the order is
+                        being cancelled.</span>
+                </div>
+
+                <label class="confirm-check">
+                    <input type="checkbox" id="ackBox">
+                    I've checked these reversal amounts and want to proceed
+                </label>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn ghost" id="cancelBtn">Keep order</button>
+                <button class="btn danger" id="confirmBtn" disabled>Delete order</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- toast -->
+    <div class="toast" id="toast">
+        <div class="t-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12" />
+            </svg>
+        </div>
+        <div>
+            <b>Order #ORD-983012 deleted</b>
+            <span class="sub">Stock +12.000g, Udhar and ₹1,100 reversed</span>
+        </div>
+    </div>
+
+    <script>
+        var overlay = document.getElementById('overlay');
+        var openBtn = document.getElementById('openDelete');
+        var cancelBtn = document.getElementById('cancelBtn');
+        var confirmBtn = document.getElementById('confirmBtn');
+        var ackBox = document.getElementById('ackBox');
+        var toast = document.getElementById('toast');
+
+        openBtn.addEventListener('click', function () {
+            overlay.classList.add('show');
+            ackBox.checked = false;
+            confirmBtn.disabled = true;
+        });
+        function closeModal() { overlay.classList.remove('show'); }
+        cancelBtn.addEventListener('click', closeModal);
+        overlay.addEventListener('click', function (e) { if (e.target === overlay) closeModal(); });
+
+        ackBox.addEventListener('change', function () {
+            confirmBtn.disabled = !ackBox.checked;
+        });
+
+        confirmBtn.addEventListener('click', function () {
+            closeModal();
+            toast.classList.add('show');
+            setTimeout(function () { toast.classList.remove('show'); }, 3400);
+        });
+
+        document.getElementById('themeBtn').addEventListener('click', function () {
+            var r = document.documentElement;
+            var cur = r.getAttribute('data-theme');
+            r.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
+        });
+    </script>
+</body>
+
+</html>
